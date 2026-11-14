@@ -38,7 +38,7 @@
 
 **3. 文字退为注脚。** 全图 3–4 处文字，每处 2–3 字。省下的信息量交给图形。代价是能承载的要点变少（≤4 个），收益是缩略后反而更清楚。
 
-> 反过来用也成立：如果标题本身有 5–6 条必须逐条读字的并列项，本库里的**卡片式版式**（B / C，见下）更合适，硬做图形化会丢掉信息。
+> 边界也要说清：如果标题有 5–6 条必须逐条读字的并列项，图形化装不下这么多信息，硬塞会既不清楚也不好看——那类标题不适合这套版式。
 
 ## 效果
 
@@ -50,17 +50,7 @@
 
 <img src="examples/05-circle-pipeline.png" alt="圆形流水线" width="100%">
 
-**另有三种卡片式版式**，适合要点较多、必须逐条读清的场合：
-
-<table>
-<tr>
-<td width="33%"><img src="examples/01-document-diagram-generation.png" alt="上→下分叉"><br><sub><b>B · 上→下分叉</b><br>一句话生成四类图示</sub></td>
-<td width="33%"><img src="examples/02-architecture-evolution.png" alt="分层选中态"><br><sub><b>C-1 · 分层选中</b><br>只改一块，其余不动</sub></td>
-<td width="33%"><img src="examples/03-diagram-canvas.png" alt="画布编辑"><br><sub><b>C-2 · 画布编辑</b><br>自然语言生成 + 局部修改</sub></td>
-</tr>
-</table>
-
-五张图不是手绘的，也不是 AI 生图，是 `examples/src/` 和 `skill/hwcloud-scene-image/assets/` 里的 HTML 被浏览器渲染出来的。改一行文字、重新渲染，就得到新的一张。
+两张图都不是手绘的，也不是 AI 生图，是 `skill/hwcloud-scene-image/assets/` 里那两个模板被浏览器渲染出来的：`template-d-orbit.html` → 04，`template-e-pipeline.html` → 05。改一行文字、重新渲染，就得到新的一张。
 
 ## 图形资产
 
@@ -143,15 +133,8 @@ HTML 渲染把这三件事都变成确定性的：文字是真文字、圆是真
 │   ├── style-spec.md            # 可执行规范：token 表 + 标题→版式映射 + 自检
 │   └── style-guide.html         # 可视化风格指南（浏览器打开）
 ├── examples/
-│   ├── 01-document-diagram-generation.png
-│   ├── 02-architecture-evolution.png
-│   ├── 03-diagram-canvas.png
 │   ├── 04-orbit-four-diagrams.png      # D 核心分支
-│   ├── 05-circle-pipeline.png          # E 圆形流水线
-│   └── src/
-│       ├── 01-document-diagram-generation.html
-│       ├── 02-architecture-evolution.html
-│       └── 03-diagram-canvas.html
+│   └── 05-circle-pipeline.png          # E 圆形流水线
 ├── skill/
 │   └── hwcloud-scene-image/     # 给 AI Agent 用的 skill（见下）
 │       ├── SKILL.md
@@ -165,9 +148,9 @@ HTML 渲染把这三件事都变成确定性的：文字是真文字、圆是真
 │       │   ├── template-d-orbit.html   # D 核心分支
 │       │   ├── template-e-pipeline.html# E 圆形流水线
 │       │   ├── _blank-shell.html       # 只有壳层，从零搭版式用
-│       │   ├── template-b-flow.html    # B 上→下分叉（卡片式）
-│       │   ├── template-c-ui.html      # C-2 画布编辑（卡片式）
-│       │   └── template-c-arch.html    # C-1 分层选中（卡片式）
+│       │   ├── template-b-flow.html    # 备选版式：上→下分叉
+│       │   ├── template-c-ui.html      # 备选版式：画布编辑
+│       │   └── template-c-arch.html    # 备选版式：分层选中
 │       └── scripts/
 │           ├── render.py        # HTML → 1760×1120 PNG
 │           ├── linklint.py      # 检查每根连线的端点是否悬空
@@ -176,7 +159,7 @@ HTML 渲染把这三件事都变成确定性的：文字是真文字、圆是真
 └── samples/                     # 原始参考样本（未随仓库分发，原因见文末）
 ```
 
-注意两套模板的完整可运行源文件：`examples/src/` 下三份对应 01–03，`assets/template-d-orbit.html` 与 `template-e-pipeline.html` 直接渲染就是 04 和 05。
+注意 `examples/` 里的两张图就是两个模板直接渲染的产物——打开模板、改文字、重渲染，即得新图，不需要任何绘图工具。
 
 ## 快速开始
 
@@ -302,15 +285,12 @@ cp -r skill/hwcloud-scene-image ~/.workbuddy/skills/
 
 ## 版式怎么选
 
-| 标题特征 | 版式 | 模板 | 取向 |
-|---|---|---|---|
-| 一个核心能力辐射多类产出 / 四种形态 | **D 核心分支** | `template-d-orbit.html` | 图形化 |
-| 2–4 步串联、上传→解析→入库这类流程 | **E 圆形流水线** | `template-e-pipeline.html` | 图形化 |
-| 输入→生成→多路产出、转换、整理 | **B 上→下分叉** | `template-b-flow.html` | 卡片式 |
-| 只改一处、其余不动、增量演进 | **C-1 分层选中** | `template-c-arch.html` | 卡片式 |
-| 既讲"生成"又讲"改" | **C-2 画布编辑** | `template-c-ui.html` | 卡片式 |
+| 标题特征 | 版式 | 模板 |
+|---|---|---|
+| 一个核心能力辐射多类产出 / 四种形态 | **D 核心分支** | `template-d-orbit.html` |
+| 2–4 步串联、上传→解析→入库这类流程 | **E 圆形流水线** | `template-e-pipeline.html` |
 
-默认走 **D / E**。只有"5–6 条并列、每条都要读字"时才退回卡片式——图形化装不下那么多信息，硬塞会既不清楚也不好看。
+两套版式对应两种最常见的结构：**一对多**和**多步串联**。遇到都不合适的标题，用 `_blank-shell.html` 起手，从 `parts.html` 挑零件自己摆——图形化版式本来就是拼出来的。
 
 ## 几何速查
 
@@ -437,7 +417,7 @@ The point is the information carrier: instead of a row of rounded cards each car
 
 - **Assets**: 50 line icons (`assets/icons.svg`, 24×24 grid, `stroke-width` deliberately omitted so it scales) and 15 graphic parts (`assets/parts.html`).
 - **Rules**: no white content card — shapes sit directly on the tinted panel; icons 84–190px; 3–4 labels of 2–3 characters each; borders come from shadow, not strokes.
-- **Layouts**: D core-branch (one capability, four outputs), E circular pipeline (2–4 steps), plus three card-based layouts for copy-heavy cases.
+- **Layouts**: D core-branch (one capability, four outputs), E circular pipeline (2–4 steps).
 - **Stack**: HTML + CSS + inline SVG, rendered by headless Edge/Chrome. `render.py` uses only the Python standard library.
 - **Why not a diffusion model**: crisp labels, exact circles and arrows, and reproducibility are hard requirements here.
 - **Agent skill**: `skill/hwcloud-scene-image/` — copy it into `~/.workbuddy/skills/` and ask "draw me: …".
