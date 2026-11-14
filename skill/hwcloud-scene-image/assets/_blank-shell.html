@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  _blank-shell.html — v2 空白壳层，从零搭版式时用
+  用法：改 .title 文字 → 在 .content 区域内摆零件（元素总数 ≤ 7）
+  内容区范围 180→1490 / 240→884；内容右缘不要超过 1230（浮标占 1312 以后）
+  元素尺寸见 ../references/style-tokens.md、版式见 ../references/layouts.md
+  渲染：python ../scripts/render.py 本文件.html out.png
+  验收：python ../scripts/preview.py out.png --width 240
+-->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1760px;height:1120px;overflow:hidden;background:#FFFFFF;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;-webkit-font-smoothing:antialiased;}
+  .canvas{position:relative;width:1760px;height:1120px;background:#FFFFFF;}
+
+  /* ---------- L1 外壳白卡：不要改 ---------- */
+  .shell{position:absolute;left:110px;top:66px;width:1520px;height:968px;border-radius:62px;
+    background:#FFFFFF;box-shadow:0 22px 60px rgba(31,71,141,.085),0 4px 14px rgba(31,71,141,.04);}
+  /* ---------- L2 淡蓝面板：渐变止于 #F5FAFF，不能更淡 ---------- */
+  .panel{position:absolute;left:140px;top:96px;width:1460px;height:908px;border-radius:50px;
+    background:linear-gradient(180deg,#E4F1FF 0%,#E9F4FF 34%,#F2F9FF 74%,#F5FAFF 100%);
+    border:1px solid #E2EEFD;}
+  /* ---------- 标题：4–6 汉字，76px/600 ---------- */
+  .title{position:absolute;left:190px;top:132px;font-size:76px;font-weight:600;color:#191919;letter-spacing:.5px;line-height:1.25;}
+  /* ---------- L3 内容白卡：1310×644，下缘 884，面板下缘 1004 ---------- */
+  .content{position:absolute;left:180px;top:240px;width:1310px;height:644px;border-radius:40px;
+    background:#FFFFFF;border:1px solid #F0F5FB;box-shadow:0 10px 30px rgba(31,71,141,.05);}
+
+  /* ---------- 渐变图标瓦片：全图恰好 1 个，170–200 ---------- */
+  .tile{position:absolute;left:250px;top:300px;width:200px;height:200px;border-radius:52px;
+    background:linear-gradient(135deg,#4A9DFC 0%,#5E92F9 45%,#7C6BF5 100%);
+    box-shadow:0 20px 44px rgba(74,157,252,.42),0 0 48px 10px rgba(124,107,245,.16);
+    display:flex;align-items:center;justify-content:center;}
+
+  /* ---------- 常规节点 330×132 ---------- */
+  .node{position:absolute;width:330px;height:132px;border-radius:34px;background:#FFFFFF;
+    border:3px solid #C9DCF2;box-shadow:0 8px 22px rgba(31,71,141,.06);
+    display:flex;align-items:center;padding-left:26px;}
+  .node .ic{width:90px;height:90px;border-radius:26px;background:#E3F0FE;
+    display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .node .tx{margin-left:20px;font-size:48px;font-weight:500;color:#191919;white-space:nowrap;}
+
+  /* ---------- L4 浮标：右缘 1632 破框 ---------- */
+  .badge{position:absolute;left:1312px;top:300px;width:320px;height:128px;border-radius:32px;background:#FFFFFF;
+    box-shadow:0 20px 48px rgba(31,71,141,.16),0 3px 8px rgba(31,71,141,.06);
+    display:flex;align-items:center;padding-left:28px;}
+  .badge .tx{margin-left:14px;font-size:44px;font-weight:500;color:#191919;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="shell"></div>
+  <div class="panel"></div>
+  <div class="title">短标题</div>
+  <div class="content"></div>
+
+  <!-- 渐变图标瓦片（只放一个） -->
+  <div class="tile">
+    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="2"/>
+      <rect x="14" y="3" width="7" height="7" rx="2"/>
+      <rect x="3" y="14" width="7" height="7" rx="2"/>
+      <rect x="14" y="14" width="7" height="7" rx="2"/>
+    </svg>
+  </div>
+
+  <!-- 这里摆内容：节点 / 层条 / 连线（元素总数 ≤ 7） -->
+
+  <div class="node" style="left:290px;top:566px;">
+    <div class="ic">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/>
+      </svg>
+    </div>
+    <div class="tx">节点</div>
+  </div>
+
+  <!-- 浮标（1–2 个，纵向间距 ≥40px） -->
+  <div class="badge">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 3l1.9 4.6L17.5 9.5l-4.6 1.9L11 16l-1.9-4.6L4.5 9.5l4.6-1.9z"/>
+      <path d="M18 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>
+    </svg>
+    <div class="tx">点题短语</div>
+  </div>
+
+</div>
+</body>
+</html>

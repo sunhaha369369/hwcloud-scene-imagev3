@@ -1,0 +1,7 @@
+# 统一换行符，避免 Windows / macOS 协作出 diff 噪音
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary

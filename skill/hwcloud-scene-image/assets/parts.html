@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v3 元素零件库 · parts
+  这一页不是交付用的场景图，是"零件墙"：14 个可复用的图形元素各摆一个实物，
+  下面标注 class 名与尺寸。需要哪个，直接把对应 HTML + CSS 抄进模板即可。
+  渲染：python scripts/render.py assets/parts.html parts.png
+-->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1760px;height:1120px;overflow:hidden;background:#FFFFFF;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;-webkit-font-smoothing:antialiased;}
+  .canvas{position:relative;width:1760px;height:1120px;background:#FFFFFF;}
+
+  .shell{position:absolute;left:110px;top:66px;width:1520px;height:968px;border-radius:62px;
+    background:#FFFFFF;box-shadow:0 22px 60px rgba(31,71,141,.085),0 4px 14px rgba(31,71,141,.04);}
+  .panel{position:absolute;left:140px;top:96px;width:1460px;height:908px;border-radius:50px;overflow:hidden;
+    background:linear-gradient(180deg,#E4F1FF 0%,#E9F4FF 34%,#F2F9FF 74%,#F5FAFF 100%);
+    border:1px solid #E2EEFD;}
+  .dots{position:absolute;left:0;top:0;width:1460px;height:908px;
+    background-image:radial-gradient(circle at 1px 1px,#C7DDF7 2.2px,transparent 2.4px);
+    background-size:48px 48px;opacity:.42;}
+
+  .head{position:absolute;left:190px;top:120px;font-size:56px;font-weight:600;color:#191919;letter-spacing:1px;}
+  .sub{position:absolute;left:192px;top:196px;font-size:26px;color:#6C7A8C;letter-spacing:.5px;}
+
+  .grid{position:absolute;left:186px;top:238px;width:1370px;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:14px 18px;}
+  .cell{height:240px;background:rgba(255,255,255,.72);border:1px solid #E4F0FD;border-radius:26px;
+    display:flex;flex-direction:column;align-items:center;}
+  .stage{height:152px;width:100%;display:flex;align-items:center;justify-content:center;position:relative;}
+  .nm{font-size:25px;font-weight:600;color:#1F3556;letter-spacing:.5px;}
+  .sz{font-size:20px;color:#8494A6;margin-top:5px;font-family:Consolas,monospace;}
+
+  /* ========== 零件区 ========== */
+  /* 1 渐变瓦片 */
+  .tile-grad{width:132px;height:132px;border-radius:36px;
+    background:linear-gradient(135deg,#4A9DFC 0%,#5E92F9 45%,#7C6BF5 100%);
+    box-shadow:0 16px 34px rgba(74,157,252,.42),0 0 34px 6px rgba(124,107,245,.14);
+    display:flex;align-items:center;justify-content:center;}
+  .tile-grad svg{width:74px;height:74px;color:#fff;stroke-width:1.6;}
+
+  /* 2 白圆徽章 */
+  .badge-c{width:132px;height:132px;border-radius:50%;background:#fff;border:3px solid #CFE0F4;
+    box-shadow:0 12px 28px rgba(31,71,141,.12);display:flex;align-items:center;justify-content:center;}
+  .badge-c svg{width:74px;height:74px;color:#2E6FCB;stroke-width:1.9;}
+
+  /* 3 浮标 */
+  .float-b{width:236px;height:94px;border-radius:24px;background:#fff;
+    box-shadow:0 18px 40px rgba(31,71,141,.18);display:flex;align-items:center;padding-left:24px;}
+  .float-b svg{width:38px;height:38px;color:#4A9DFC;stroke-width:1.9;}
+  .float-b .tx{margin-left:11px;font-size:33px;font-weight:500;color:#191919;white-space:nowrap;}
+
+  /* 4 标签胶囊 */
+  .chip{height:56px;padding:0 26px;border-radius:28px;background:#E3F0FE;color:#2E6FCB;
+    font-size:27px;font-weight:600;display:flex;align-items:center;letter-spacing:1px;}
+  .chip.solid{background:linear-gradient(135deg,#4A9DFC,#7C6BF5);color:#fff;}
+
+  /* 5 窗口 */
+  .win{width:210px;height:132px;border-radius:16px;background:#fff;border:2px solid #DDEBFB;
+    box-shadow:0 10px 24px rgba(31,71,141,.10);overflow:hidden;}
+  .win .bar{height:26px;background:#EFF7FF;display:flex;align-items:center;padding-left:11px;gap:6px;}
+  .win .bar i{width:9px;height:9px;border-radius:50%;background:#B8D5F3;display:block;}
+  .win .body{height:106px;padding:12px;display:flex;gap:8px;}
+  .win .body b{flex:1;border-radius:8px;background:#E3F0FE;display:block;}
+  .win .body b:nth-child(2){background:linear-gradient(135deg,#4A9DFC,#7C6BF5);}
+
+  /* 6 层堆叠：越靠下的层越宽、边框越实，才叠得起来 */
+  .stackk{position:relative;width:170px;height:112px;}
+  .stackk i{position:absolute;height:32px;border-radius:11px;display:block;
+    background:#fff;box-shadow:0 6px 16px rgba(31,71,141,.10);border:3px solid #CFE0F4;}
+  .stackk i:nth-child(1){top:0;left:20px;width:130px;}
+  .stackk i:nth-child(2){top:34px;left:10px;width:150px;border-color:#8FBDF0;}
+  .stackk i:nth-child(3){top:68px;left:0;width:170px;border-color:#4A9DFC;background:#F2F8FF;}
+
+  /* 7 渐变箭头 */
+  .arrow-g{width:150px;height:62px;}
+
+  /* 8 虚线 */
+  .dash-l{width:150px;height:6px;border-radius:3px;
+    background-image:repeating-linear-gradient(90deg,#A9C7EC 0 12px,transparent 12px 24px);}
+
+  /* 9 选中手柄 */
+  .hdl{position:relative;width:120px;height:120px;border:4px dashed #A9C7EC;border-radius:18px;}
+  .hdl i{position:absolute;width:18px;height:18px;background:#fff;border:3px solid #4A9DFC;border-radius:5px;}
+  .hdl i:nth-child(1){left:-9px;top:-9px;}
+  .hdl i:nth-child(2){right:-9px;top:-9px;}
+  .hdl i:nth-child(3){left:-9px;bottom:-9px;}
+  .hdl i:nth-child(4){right:-9px;bottom:-9px;}
+
+  /* 10 气泡 */
+  .bub{position:relative;width:216px;height:88px;border-radius:22px;background:#fff;
+    box-shadow:0 12px 30px rgba(31,71,141,.13);display:flex;align-items:center;padding-left:22px;}
+  .bub svg{width:34px;height:34px;color:#4A9DFC;stroke-width:1.9;}
+  .bub span{margin-left:10px;font-size:30px;font-weight:500;color:#1F3556;}
+  .bub:after{content:"";position:absolute;left:42px;bottom:-13px;width:26px;height:26px;background:#fff;
+    transform:rotate(45deg);border-radius:0 0 6px 0;box-shadow:6px 6px 14px rgba(31,71,141,.06);}
+
+  /* 11 环形进度 */
+  .ring-p{width:132px;height:132px;}
+
+  /* 12 微柱图 */
+  .bars{width:150px;height:110px;display:flex;align-items:flex-end;gap:14px;}
+  .bars b{flex:1;border-radius:9px 9px 4px 4px;background:#BFDBF8;display:block;}
+  .bars b:nth-child(1){height:44%;}
+  .bars b:nth-child(2){height:68%;background:#7FB6F3;}
+  .bars b:nth-child(3){height:100%;background:linear-gradient(180deg,#5E92F9,#7C6BF5);}
+
+  /* 13 点阵 */
+  .dotgrid{width:150px;height:110px;border-radius:16px;
+    background-image:radial-gradient(circle at 1px 1px,#B7D5F4 3px,transparent 3.4px);
+    background-size:24px 24px;}
+
+  /* 14 星芒 */
+  .spark{width:150px;height:132px;}
+
+  /* 15 选中瓦片：高亮态靠"外光晕 + 粗边"，不用虚线框（虚线会被连线穿过） */
+  .tile-sel{width:132px;height:132px;border-radius:36px;background:#F4FAFF;
+    border:5px solid #4A9DFC;box-shadow:0 0 0 10px rgba(74,157,252,.10);
+    display:flex;align-items:center;justify-content:center;}
+  .tile-sel svg{width:72px;height:72px;color:#2E6FCB;stroke-width:1.8;}
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="shell"></div>
+  <div class="panel"><div class="dots"></div></div>
+
+  <div class="head">元素零件库</div>
+  <div class="sub">15 件 / 直接抄 HTML + CSS / 全部符合蓝紫 + 扁平 + 0° 透视</div>
+
+  <div class="grid">
+    <div class="cell"><div class="stage"><div class="tile-grad"><svg><use href="#i-sparkles"/></svg></div></div>
+      <div class="nm">渐变瓦片</div><div class="sz">170–200 / r44</div></div>
+
+    <div class="cell"><div class="stage"><div class="badge-c"><svg><use href="#i-database"/></svg></div></div>
+      <div class="nm">白圆徽章</div><div class="sz">.badge-c 152–176</div></div>
+
+    <div class="cell"><div class="stage">
+      <div class="float-b"><svg><use href="#i-check"/></svg><span class="tx">局部可改</span></div></div>
+      <div class="nm">破框浮标</div><div class="sz">.float-b 320×128</div></div>
+
+    <div class="cell"><div class="stage" style="gap:12px;flex-direction:column;">
+      <div class="chip">3 步</div><div class="chip solid">已完成</div></div>
+      <div class="nm">标签胶囊</div><div class="sz">.chip 高 56–64</div></div>
+
+    <div class="cell"><div class="stage"><div class="win">
+      <div class="bar"><i></i><i></i><i></i></div><div class="body"><b></b><b></b><b></b></div>
+      </div></div>
+      <div class="nm">窗口框</div><div class="sz">.win 栏高 26</div></div>
+
+    <div class="cell"><div class="stage"><div class="stackk"><i></i><i></i><i></i></div></div>
+      <div class="nm">层堆叠</div><div class="sz">.stackk 170×112</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="arrow-g" viewBox="0 0 150 62">
+        <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#AECFF5"/><stop offset="1" stop-color="#6FA5EE"/>
+        </linearGradient></defs>
+        <path d="M0 8h92l58 23-58 23H0z" fill="url(#pg)"/>
+      </svg></div>
+      <div class="nm">渐变箭头</div><div class="sz">.arrow-g 平头 + 尖头</div></div>
+
+    <div class="cell"><div class="stage"><div class="dash-l"></div></div>
+      <div class="nm">虚线连接</div><div class="sz">4–5px / dash 12 10</div></div>
+
+    <div class="cell"><div class="stage"><div class="hdl"><i></i><i></i><i></i><i></i></div></div>
+      <div class="nm">选中手柄</div><div class="sz">.hdl 18 / 对准角点</div></div>
+
+    <div class="cell"><div class="stage">
+      <div class="bub"><svg><use href="#i-cursor"/></svg><span>改成分片</span></div></div>
+      <div class="nm">指令气泡</div><div class="sz">.bub 尖角 26</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="ring-p" viewBox="0 0 132 132">
+        <circle cx="66" cy="66" r="54" fill="none" stroke="#E2EFFC" stroke-width="14"/>
+        <circle cx="66" cy="66" r="54" fill="none" stroke="#4A9DFC" stroke-width="14"
+                stroke-linecap="round" stroke-dasharray="238 339" transform="rotate(-90 66 66)"/>
+      </svg></div>
+      <div class="nm">环形进度</div><div class="sz">.ring-p r54 / sw14</div></div>
+
+    <div class="cell"><div class="stage"><div class="bars"><b></b><b></b><b></b></div></div>
+      <div class="nm">微柱图</div><div class="sz">.bars 150×126</div></div>
+
+    <div class="cell"><div class="stage"><div class="dotgrid"></div></div>
+      <div class="nm">点阵底纹</div><div class="sz">.dotgrid 间距 22</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="spark" viewBox="0 0 150 132">
+        <path d="M75 14c2.4 27 22 46.6 49 49-27 2.4-46.6 22-49 49-2.4-27-22-46.6-49-49 27-2.4 46.6-22 49-49z"
+              fill="url(#sp)"/>
+        <defs><linearGradient id="sp" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4A9DFC"/><stop offset="1" stop-color="#7C6BF5"/>
+        </linearGradient></defs>
+      </svg></div>
+      <div class="nm">星芒</div><div class="sz">.spark 点题用</div></div>
+
+    <div class="cell"><div class="stage">
+      <div class="tile-sel"><svg><use href="#i-pen"/></svg></div></div>
+      <div class="nm">选中瓦片</div><div class="sz">.tile-sel 5px + 光晕</div></div>
+  </div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!--
+  v3 图标库 · 线性图标 50 枚
+  ------------------------------------------------------------
+  用法：整段 <svg style="display:none">…</svg> 内联到页面顶部，然后
+        <svg class="glyph"><use href="#i-terminal"/></svg>
+  网格：24×24。symbol 内**不写 stroke-width**——linecap 与颜色统一在此，
+        线宽由使用处控制：显示 56–64px 用 1.9–2.2（视觉 4.5–6px），
+        显示 110px 以上用 1.5–1.7，否则太大尺寸会显得笨重。
+  上色：图标吃 currentColor，用 CSS color 或父级 stroke 控制
+  约束：只用蓝紫色系（200°–250°），不引入第二套视觉语言
+-->
+<defs>
+  <g id="_none"></g>
+</defs>
+
+<!-- ========== 图表 / 图示 ========== -->
+<symbol id="i-sequence" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="2.5" width="6.2" height="3.8" rx="1.2"/>
+  <rect x="15.3" y="2.5" width="6.2" height="3.8" rx="1.2"/>
+  <path d="M5.6 6.3v15.2M18.4 6.3v15.2"/>
+  <path d="M5.6 10.8h10.2"/>
+  <path d="M18.4 15.6H8.2"/>
+</symbol>
+<symbol id="i-er" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="8.5" width="6" height="7" rx="1.6"/>
+  <rect x="15.5" y="8.5" width="6" height="7" rx="1.6"/>
+  <path d="M12 8.8l2 3.2-2 3.2-2-3.2 2-3.2z"/>
+  <path d="M8.5 12h1.4M14.1 12h1.4"/>
+</symbol>
+<symbol id="i-state" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="8.5" width="7.4" height="7" rx="3.5"/>
+  <rect x="14.6" y="8.5" width="7.4" height="7" rx="3.5"/>
+  <path d="M9.6 12h3.2"/>
+  <path d="M11.4 9.9l2.1 2.1-2.1 2.1"/>
+</symbol>
+<symbol id="i-topology" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="2.6"/>
+  <circle cx="12" cy="4" r="1.8"/>
+  <circle cx="12" cy="20" r="1.8"/>
+  <circle cx="4" cy="12" r="1.8"/>
+  <circle cx="20" cy="12" r="1.8"/>
+  <path d="M12 9.4V5.8M12 14.6v3.6M9.4 12H5.8M14.6 12h3.6"/>
+</symbol>
+<symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="9" width="5" height="6" rx="1.2"/>
+  <path d="M12 6l3 6-3 6-3-6 3-6z"/>
+  <path d="M7 12h1.8M15 12h6"/>
+</symbol>
+<symbol id="i-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="9" y="2.5" width="6" height="4.5" rx="1.2"/>
+  <rect x="2" y="17" width="6" height="4.5" rx="1.2"/>
+  <rect x="16" y="17" width="6" height="4.5" rx="1.2"/>
+  <path d="M12 7v5M5 17v-5h14v5"/>
+</symbol>
+<symbol id="i-kanban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3.5" width="5" height="17" rx="1.6"/>
+  <rect x="10" y="3.5" width="5" height="11" rx="1.6"/>
+  <rect x="17" y="3.5" width="4" height="14" rx="1.6"/>
+</symbol>
+<symbol id="i-timeline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 3v18"/>
+  <rect x="7" y="6" width="10" height="3.4" rx="1.7"/>
+  <rect x="11" y="11.3" width="9" height="3.4" rx="1.7"/>
+  <rect x="7" y="16.6" width="6" height="3.4" rx="1.7"/>
+</symbol>
+<symbol id="i-chart-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 20.5h17"/>
+  <rect x="5" y="12" width="3.4" height="6" rx="1.2"/>
+  <rect x="10.3" y="8" width="3.4" height="10" rx="1.2"/>
+  <rect x="15.6" y="3.5" width="3.4" height="14.5" rx="1.2"/>
+</symbol>
+<symbol id="i-chart-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 3.5v17h17"/>
+  <path d="M6.5 15.5l4-4.5 3.2 3 4.8-6"/>
+</symbol>
+<symbol id="i-chart-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="8.5"/>
+  <path d="M12 3.5v8.5h8.5"/>
+</symbol>
+<symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="5.5" height="5.5" rx="1.4"/>
+  <rect x="9.8" y="3" width="5.5" height="5.5" rx="1.4"/>
+  <rect x="16.5" y="3" width="4.5" height="5.5" rx="1.4"/>
+  <rect x="3" y="9.8" width="5.5" height="5.5" rx="1.4"/>
+  <rect x="9.8" y="9.8" width="5.5" height="5.5" rx="1.4"/>
+  <rect x="16.5" y="9.8" width="4.5" height="5.5" rx="1.4"/>
+  <rect x="3" y="16.5" width="5.5" height="4.5" rx="1.4"/>
+  <rect x="9.8" y="16.5" width="5.5" height="4.5" rx="1.4"/>
+  <rect x="16.5" y="16.5" width="4.5" height="4.5" rx="1.4"/>
+</symbol>
+
+<!-- ========== 技术元素 ========== -->
+<symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="4" width="20" height="16" rx="2.4"/>
+  <path d="M6.5 15.5l4-3.5-4-3.5M13 16h5"/>
+</symbol>
+<symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/>
+</symbol>
+<symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse cx="12" cy="5.5" rx="8" ry="3"/>
+  <path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/>
+  <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>
+</symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M17.5 19.5a4.5 4.5 0 001.2-8.8 6.2 6.2 0 00-11.9-1.6A4.2 4.2 0 007 19.5z"/>
+</symbol>
+<symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="3.5" width="19" height="7" rx="2"/>
+  <rect x="2.5" y="13.5" width="19" height="7" rx="2"/>
+  <path d="M6.5 7h.01M6.5 17h.01M11 7h5M11 17h5"/>
+</symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="6" y="6" width="12" height="12" rx="2.4"/>
+  <rect x="10" y="10" width="4" height="4" rx="1"/>
+  <path d="M9.5 2.5v3M14.5 2.5v3M9.5 18.5v3M14.5 18.5v3M2.5 9.5h3M2.5 14.5h3M18.5 9.5h3M18.5 14.5h3"/>
+</symbol>
+<symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="6" cy="4.2" r="2.2"/>
+  <circle cx="6" cy="19.8" r="2.2"/>
+  <circle cx="18" cy="19.8" r="2.2"/>
+  <path d="M6 6.4v11.2"/>
+  <path d="M18 17.6V13a5 5 0 00-5-5H6"/>
+</symbol>
+<symbol id="i-merge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="6" cy="4.2" r="2.2"/>
+  <circle cx="18" cy="4.2" r="2.2"/>
+  <circle cx="12" cy="19.8" r="2.2"/>
+  <path d="M6 6.4V8a5 5 0 005 5M18 6.4V8a5 5 0 01-5 5"/>
+  <path d="M12 13v4.6"/>
+</symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 21.5s8-3.8 8-9.6V5.2L12 2.2 4 5.2v6.7c0 5.8 8 9.6 8 9.6z"/>
+  <path d="M9 11.5l2.2 2.2L15.5 9"/>
+</symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4" y="10.5" width="16" height="10.5" rx="2.4"/>
+  <path d="M8 10.5V7a4 4 0 018 0v3.5"/>
+  <path d="M12 15v2"/>
+</symbol>
+<symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M13 2.5L4 13.5h7l-1 8 9-11h-7l1-8z"/>
+</symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"/>
+  <path d="M12 7.5V12l3 2"/>
+</symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 2.5l9.5 5-9.5 5-9.5-5 9.5-5z"/>
+  <path d="M2.5 12.5l9.5 5 9.5-5"/>
+  <path d="M2.5 17l9.5 5 9.5-5"/>
+</symbol>
+<symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 7.8l-9-4.8-9 4.8v8.4l9 4.8 9-4.8V7.8z"/>
+  <path d="M3 7.8l9 4.9 9-4.9M12 12.7v8.3"/>
+</symbol>
+<symbol id="i-window" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="4" width="19" height="16" rx="2.4"/>
+  <path d="M2.5 9h19"/>
+  <path d="M6 6.5h.01M9 6.5h.01M12 6.5h.01"/>
+</symbol>
+
+<!-- ========== AI / 内容 ========== -->
+<symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 2.5c.6 4.6 4.1 8.1 8.7 8.7-4.6.6-8.1 4.1-8.7 8.7-.6-4.6-4.1-8.1-8.7-8.7 4.6-.6 8.1-4.1 8.7-8.7z"/>
+  <path d="M18.5 15.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3z"/>
+</symbol>
+<symbol id="i-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 21L14 10"/>
+  <path d="M15.5 3.5v4M13.5 5.5h4M19.5 9.5v3M18 11h3M8 3.5v3M6.5 5h3"/>
+</symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3.5" y="8" width="17" height="12" rx="3.2"/>
+  <path d="M12 8V4.5"/>
+  <circle cx="12" cy="3.2" r="1.4"/>
+  <path d="M8.5 13.5v1.5M15.5 13.5v1.5"/>
+</symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 18h6M10 21h4"/>
+  <path d="M12 2.5a6.5 6.5 0 00-3.8 11.8c.5.3.8.8.8 1.4V18h6v-2.3c0-.6.3-1.1.8-1.4A6.5 6.5 0 0012 2.5z"/>
+</symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 2.5H7A2.5 2.5 0 004.5 5v14A2.5 2.5 0 007 21.5h10a2.5 2.5 0 002.5-2.5V8l-5.5-5.5z"/>
+  <path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>
+</symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M2.5 4.5h6a4 4 0 014 4v12a3 3 0 00-3-3h-7v-13z"/>
+  <path d="M21.5 4.5h-6a4 4 0 00-4 4v12a3 3 0 013-3h7v-13z"/>
+</symbol>
+<symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="4" width="19" height="16" rx="2.4"/>
+  <circle cx="8.8" cy="9.8" r="1.8"/>
+  <path d="M21.5 16l-5.2-5.2L7 20"/>
+</symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 13.5a5 5 0 007.4.4l2-2a5 5 0 00-7-7l-1.2 1.1"/>
+  <path d="M14 10.5a5 5 0 00-7.4-.4l-2 2a5 5 0 007 7l1.2-1.1"/>
+</symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 2.5c2.6 2.2 4.2 5.6 4.2 9.2v3.8H7.8v-3.8c0-3.6 1.6-7 4.2-9.2z"/>
+  <circle cx="12" cy="8.6" r="1.7"/>
+  <path d="M7.8 12.5L5 16.6h2.8M16.2 12.5L19 16.6h-2.8"/>
+  <path d="M10 17.6l2 3.9 2-3.9"/>
+</symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20.5 12a8.5 8.5 0 01-14.8 5.7M3.5 12a8.5 8.5 0 0114.8-5.7"/>
+  <path d="M20.5 3.5v5h-5M3.5 20.5v-5h5"/>
+</symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20 6L9 17l-5-5"/>
+</symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="10.5" cy="10.5" r="7"/>
+  <path d="M20.5 20.5l-4.7-4.7"/>
+</symbol>
+<symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"/>
+  <circle cx="12" cy="12" r="4.6"/>
+  <circle cx="12" cy="12" r="1.2"/>
+</symbol>
+<symbol id="i-cursor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 3l6.5 17 2.4-6.6L20.5 11 5 3z"/>
+</symbol>
+<symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 20.5h9"/>
+  <path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+</symbol>
+<symbol id="i-frame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 2.5v19M17 2.5v19M2.5 7h19M2.5 17h19"/>
+</symbol>
+<symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21 15a2.5 2.5 0 01-2.5 2.5H8L3 21.5V4.5A2.5 2.5 0 015.5 2h13A2.5 2.5 0 0121 4.5V15z"/>
+  <path d="M8 8.5h8M8 12h5"/>
+</symbol>
+<symbol id="i-toggle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="7" width="20" height="10" rx="5"/>
+  <circle cx="16.5" cy="12" r="3"/>
+</symbol>
+<symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 16.5V3.5M7.5 8L12 3.5 16.5 8"/>
+  <path d="M3.5 16v3A2.5 2.5 0 006 21.5h12a2.5 2.5 0 002.5-2.5v-3"/>
+</symbol>
+<symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 12h17M14 5.5l6.5 6.5-6.5 6.5"/>
+</symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/>
+  <circle cx="9" cy="6.5" r="2.2"/>
+  <circle cx="15.5" cy="12" r="2.2"/>
+  <circle cx="7" cy="17.5" r="2.2"/>
+</symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 4.5v15M4.5 12h15"/>
+</symbol>
+<symbol id="i-node-graph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="3" width="7" height="6" rx="2"/>
+  <rect x="14.5" y="3" width="7" height="6" rx="2"/>
+  <rect x="8.5" y="15" width="7" height="6" rx="2"/>
+  <path d="M6 9v3.5h12V9M12 12.5V15"/>
+</symbol>
+</svg>
+
+</body>
+</html>

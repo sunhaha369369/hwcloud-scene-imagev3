@@ -1,0 +1,28 @@
+# ---- 原始参考样本：版权归原权利方，不随仓库分发 ----
+# 如需一并发布（须确认已获授权）：git add -f samples/
+samples/
+
+# ---- WorkBuddy 项目私有数据 ----
+.workbuddy/
+
+# ---- 渲染临时产物 ----
+_scene_*/
+*.log
+
+# ---- 系统噪音 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- 编辑器 ----
+.vscode/
+.idea/
+
+# 缩略预览是本地自检产物，不入库
+*_preview.png

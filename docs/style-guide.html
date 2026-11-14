@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华为云场景图 · 视觉风格指南</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --blue:#4A9DFC; --blue-deep:#2F7FE8; --purple:#7C6BF5;
+    --band:#E6F2FF; --tint:#F1F7FF; --tint2:#F9FAFF;
+    --line:#E3EAF3; --ink:#191919; --ink2:#5A616B; --ink3:#9AA4B2;
+    --coral:#F58A8A;
+  }
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Source Han Sans SC","Segoe UI",sans-serif;
+    background:#F7F9FC; color:var(--ink); line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px; margin:0 auto; padding:56px 32px 100px;}
+
+  /* ---------- cover ---------- */
+  .cover{
+    background:#fff; border-radius:24px; padding:52px 48px 44px;
+    box-shadow:0 12px 40px rgba(31,71,141,.07); position:relative; overflow:hidden;
+  }
+  .cover::after{
+    content:""; position:absolute; right:-120px; top:-120px; width:420px; height:420px;
+    background:radial-gradient(circle,#E6F2FF 0%,rgba(230,242,255,0) 70%); border-radius:50%;
+  }
+  .kicker{font-size:12px; letter-spacing:.22em; color:var(--blue); font-weight:600; margin-bottom:16px;}
+  h1{font-size:40px; line-height:1.3; font-weight:600; letter-spacing:-.5px;}
+  .sub{font-size:16px; color:var(--ink2); margin-top:18px; max-width:640px;}
+  .meta{display:flex; gap:40px; margin-top:36px; flex-wrap:wrap; position:relative; z-index:1;}
+  .meta div{font-size:13px; color:var(--ink3);}
+  .meta b{display:block; font-size:19px; color:var(--ink); font-weight:600; margin-top:4px;}
+
+  /* ---------- section ---------- */
+  section{margin-top:64px;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px;}
+  .num{font-size:12px; font-weight:700; color:var(--blue); letter-spacing:.1em;}
+  h2{font-size:24px; font-weight:600; letter-spacing:-.2px;}
+  .lead{font-size:14.5px; color:var(--ink2); margin-bottom:26px; max-width:760px;}
+
+  .card{
+    background:#fff; border-radius:18px; padding:28px 30px;
+    box-shadow:0 6px 22px rgba(31,71,141,.05);
+  }
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  @media(max-width:860px){ .grid2,.grid3,.grid4{grid-template-columns:1fr;} }
+
+  /* ---------- ref strip ---------- */
+  .refs{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:26px;}
+  .ref{border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 14px rgba(31,71,141,.07);}
+  .ref img{width:100%; display:block;}
+  .ref span{display:block; font-size:11.5px; color:var(--ink3); padding:7px 10px 9px; border-top:1px solid #F0F4F9;}
+
+  /* ---------- layer diagram ---------- */
+  .layers{display:flex; gap:40px; align-items:center; flex-wrap:wrap;}
+  .layers svg{flex:0 0 340px;}
+  .layer-list{flex:1; min-width:280px;}
+  .layer-list li{list-style:none; display:flex; gap:14px; padding:11px 0; border-bottom:1px dashed #EDF2F8; font-size:14px;}
+  .layer-list li:last-child{border:none;}
+  .tag{
+    flex:0 0 auto; font-size:11px; font-weight:700; color:var(--blue);
+    background:#EDF5FF; border-radius:6px; padding:1px 8px; height:22px; line-height:22px;
+  }
+  .layer-list em{font-style:normal; color:var(--ink2);}
+
+  /* ---------- swatches ---------- */
+  .swatch{border-radius:12px; overflow:hidden; border:1px solid #EDF1F7; background:#fff;}
+  .swatch .chip{height:64px;}
+  .swatch .info{padding:10px 12px 12px; font-size:11.5px; color:var(--ink2); line-height:1.5;}
+  .swatch .info b{display:block; font-size:12.5px; color:var(--ink); font-weight:600; margin-bottom:2px;}
+  .swatch .info code{font-family:ui-monospace,"SF Mono",Consolas,monospace; font-size:11px; color:var(--ink3);}
+  .ratio{display:flex; height:34px; border-radius:10px; overflow:hidden; margin-top:18px; font-size:11px; font-weight:600;}
+  .ratio div{display:flex; align-items:center; justify-content:center;}
+
+  /* ---------- element library ---------- */
+  .el{background:#fff; border-radius:14px; padding:20px 16px 16px; text-align:center; box-shadow:0 4px 16px rgba(31,71,141,.05);}
+  .el .stage{height:82px; display:flex; align-items:center; justify-content:center;}
+  .el h4{font-size:12.5px; font-weight:600; margin-top:10px;}
+  .el p{font-size:11px; color:var(--ink3); line-height:1.6; margin-top:4px;}
+
+  /* reusable css recreations of the style */
+  .tile{
+    width:54px; height:54px; border-radius:14px;
+    background:linear-gradient(135deg,#4A9DFC 0%,#7C6BF5 100%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px rgba(74,157,252,.35);
+  }
+  .skel{background:#D9E7FA; border-radius:4px; height:7px;}
+  .drawer{display:flex; flex-direction:column; gap:8px; width:80px;}
+  .floatchip{
+    background:#fff; border-radius:11px; padding:7px 12px; font-size:10.5px; font-weight:600;
+    box-shadow:0 10px 26px rgba(31,71,141,.13); display:flex; align-items:center; gap:6px;
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--blue);}
+  .pill-grad{
+    background:linear-gradient(135deg,#4A9DFC,#7C6BF5); color:#fff; font-size:10.5px; font-weight:600;
+    border-radius:8px; padding:7px 12px; box-shadow:0 8px 18px rgba(74,157,252,.3);
+  }
+  .node{width:44px; height:44px; border-radius:11px; background:#fff; border:1px solid #EAF0F8;
+        box-shadow:0 3px 10px rgba(31,71,141,.06); display:flex; align-items:center; justify-content:center;}
+  .ring{width:52px; height:52px; border-radius:50%;
+        background:conic-gradient(from 200deg,#4A9DFC 0deg,#7C6BF5 240deg,#E8F1FC 240deg 360deg);
+        display:flex; align-items:center; justify-content:center;}
+  .ring i{width:40px; height:40px; border-radius:50%; background:#fff; display:block;}
+  .orbit{width:78px; height:78px; border:1px dashed #C9DFFE; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative;}
+  .orbit::before{content:""; position:absolute; width:52px; height:52px; border:1px dashed #DCE8F8; border-radius:50%;}
+
+  /* ---------- tables ---------- */
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th{
+    text-align:left; font-size:11.5px; letter-spacing:.08em; color:var(--ink3); font-weight:600;
+    padding:0 12px 10px; border-bottom:1px solid var(--line);
+  }
+  td{padding:13px 12px; border-bottom:1px solid #F1F5FA; vertical-align:top; color:var(--ink2);}
+  td:first-child{color:var(--ink); font-weight:500;}
+  tr:last-child td{border-bottom:none;}
+  .mono{font-family:ui-monospace,"SF Mono",Consolas,monospace; font-size:12.5px; color:var(--blue-deep);}
+
+  /* ---------- prompt block ---------- */
+  pre{
+    background:#0F1723; color:#D6E3F3; border-radius:14px; padding:22px 24px;
+    font-family:ui-monospace,"SF Mono",Consolas,monospace; font-size:12.5px; line-height:1.85;
+    overflow-x:auto; white-space:pre-wrap;
+  }
+  pre .k{color:#7FB3FF;} pre .v{color:#F2C879;} pre .c{color:#6B7E96;}
+  .note{
+    background:#EDF5FF; border-left:3px solid var(--blue); border-radius:0 10px 10px 0;
+    padding:14px 18px; font-size:13px; color:#2A4364; margin-top:18px;
+  }
+  .warn{background:#FFF6F6; border-left-color:var(--coral); color:#7A3A3A;}
+  .foot{margin-top:70px; font-size:12px; color:var(--ink3); text-align:center;}
+  .checklist li{font-size:13.5px; color:var(--ink2); margin-left:18px; padding:5px 0;}
+  .checklist li::marker{color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="cover">
+    <div class="kicker">VISUAL STYLE SPEC · V1.0</div>
+    <h1>华为云场景图<br>视觉风格指南</h1>
+    <p class="sub">基于 4 个产品场景（昇腾云算力 / Nacos / OpenCode / Easy Dataset）共 14 张场景图的逆向分析。目标：仅凭一个标题，即可复现同一风格的场景图。</p>
+    <div class="meta">
+      <div>样本数量<b>14 张</b></div>
+      <div>画布比例<b>11 : 7</b></div>
+      <div>色相范围<b>200°–250°</b></div>
+      <div>风格族<b>扁平矢量 UI 示意图</b></div>
+    </div>
+  </div>
+
+  <!-- 01 -->
+  <section>
+    <div class="sec-head"><span class="num">01</span><h2>风格定性</h2></div>
+    <p class="lead">这不是"AI 生成的插画"，而是一套<strong>扁平矢量 UI 示意图系统</strong>：用卡片层叠制造空间、用渐变图标瓦片承载主体、用虚线连接表达流程、用骨架条代替真实内容。<br>三句话记住它：<strong>无人物、无透视、无照片质感</strong>；<strong>卡片叠起来但有 0° 透视</strong>；<strong>一根蓝紫色的线串起所有信息</strong>。</p>
+    <div class="refs">
+      <div class="ref"><img src="../examples/01-document-diagram-generation.png" alt=""><span>左→右流程 + 四联输出</span></div>
+      <div class="ref"><img src="../examples/02-architecture-evolution.png" alt=""><span>界面隐喻 · 分层架构选中态</span></div>
+      <div class="ref"><img src="../examples/03-diagram-canvas.png" alt=""><span>界面隐喻 · 画布编辑态</span></div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section>
+    <div class="sec-head"><span class="num">02</span><h2>构图：三层嵌套 + 破框浮标</h2></div>
+    <p class="lead">所有图共用同一套"外壳"。空间感来自<strong>层与层的错位与投影</strong>，而非透视变形。层与层之间固定向右下偏移，形成"叠纸"效果。</p>
+    <div class="card">
+      <div class="layers">
+        <svg width="340" height="250" viewBox="0 0 340 250">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E6F2FF"/><stop offset="100%" stop-color="#F9FAFF"/>
+            </linearGradient>
+            <filter id="s1" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#1F478D" flood-opacity="0.10"/>
+            </filter>
+          </defs>
+          <!-- L1 outer white -->
+          <rect x="48" y="34" width="250" height="164" rx="22" fill="#fff" filter="url(#s1)"/>
+          <!-- L2 blue panel -->
+          <rect x="30" y="20" width="240" height="152" rx="18" fill="url(#g1)" stroke="#E1EEFE"/>
+          <!-- L3 inner card -->
+          <rect x="48" y="52" width="200" height="100" rx="12" fill="#fff" stroke="#F0F5FB"/>
+          <!-- L4 float -->
+          <rect x="248" y="150" width="80" height="34" rx="10" fill="#fff" filter="url(#s1)" stroke="#F2F6FB"/>
+          <rect x="258" y="161" width="12" height="12" rx="3.5" fill="#4A9DFC"/>
+          <rect x="276" y="164" width="40" height="6" rx="3" fill="#D9E7FA"/>
+          <!-- ghost float (style only) -->
+          <rect x="248" y="150" width="80" height="34" rx="10" fill="none" stroke="#C9DFFE" stroke-dasharray="3 3"/>
+
+          <!-- callouts -->
+          <g font-family="PingFang SC,Microsoft YaHei" font-size="10" fill="#8494A8">
+            <text x="6" y="14">L2 淡蓝面板</text>
+            <text x="6" y="196">L3 内容白卡</text>
+            <text x="252" y="200">L4 浮标</text>
+            <text x="112" y="228">L1 外壳白卡（投影）</text>
+          </g>
+          <path d="M40 18 L34 20" stroke="#C9DFFE"/>
+          <line x1="120" y1="16" x2="120" y2="19" stroke="#DCE8F8"/>
+        </svg>
+        <div class="layer-list">
+          <li><span class="tag">L0</span><div>画布 · <em>纯白 #FFFFFF，无边框、无渐变、无暗角；四周留白 ≥ 8%</em></div></li>
+          <li><span class="tag">L1</span><div>外壳白卡 · <em>占宽 88–93%，圆角 ≈4%W，弥散投影 0 8 24 rgba(31,71,141,.06)</em></div></li>
+          <li><span class="tag">L2</span><div>淡蓝面板 · <em>内缩 2.5%W，垂直渐变 #E6F2FF → #F9FAFF，顶部 20% 最饱和</em></div></li>
+          <li><span class="tag">L3</span><div>内容白卡 · <em>内缩再 2%W，纯白，1px 极淡描边 #F0F5FB</em></div></li>
+          <li><span class="tag">L4</span><div>浮动标签 · <em>跨越 L2/L1 边界"破框而出"，投影加倍，是视觉焦点副中心</em></div></li>
+        </div>
+      </div>
+      <div class="note">关键纪律：<strong>每增加一层就向右下偏移 8–14px</strong>，且偏移量随层级递增。这是全系统唯一的"深度"来源，一旦加入透视或 3D 就会破风格。</div>
+    </div>
+
+    <div class="grid3" style="margin-top:20px">
+      <div class="card">
+        <svg width="100%" viewBox="0 0 300 190">
+          <rect x="14" y="12" width="272" height="166" rx="16" fill="#F4F8FF" stroke="#E6EFFB"/>
+          <rect x="28" y="26" width="244" height="138" rx="12" fill="#fff"/>
+          <rect x="122" y="44" width="52" height="52" rx="14" fill="#4A9DFC"/>
+          <line x1="148" y1="98" x2="70" y2="132" stroke="#C9DFFE" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <line x1="148" y1="98" x2="148" y2="132" stroke="#C9DFFE" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <line x1="148" y1="98" x2="226" y2="132" stroke="#C9DFFE" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <rect x="42" y="130" width="52" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+          <rect x="122" y="130" width="52" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+          <rect x="202" y="130" width="52" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+        </svg>
+        <h4 style="font-size:13.5px;margin-top:12px">A · 中心辐射</h4>
+        <p style="font-size:12px;color:#5A616B;line-height:1.7;margin-top:4px">中心主体 → 3 条虚线向下分叉 → 3 个 chip。适合"管理/注册/发现/中心"类标题。占比约 35%。</p>
+      </div>
+      <div class="card">
+        <svg width="100%" viewBox="0 0 300 190">
+          <rect x="14" y="12" width="272" height="166" rx="16" fill="#F4F8FF" stroke="#E6EFFB"/>
+          <rect x="28" y="26" width="244" height="138" rx="12" fill="#fff"/>
+          <rect x="46" y="62" width="50" height="50" rx="14" fill="#4A9DFC"/>
+          <line x1="104" y1="87" x2="150" y2="87" stroke="#C9DFFE" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <path d="M150 87 l-7 -3.5 v7 z" fill="#7FB3FF"/>
+          <rect x="162" y="52" width="86" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+          <rect x="162" y="88" width="86" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+          <rect x="162" y="124" width="86" height="26" rx="7" fill="#fff" stroke="#EAF0F8"/>
+        </svg>
+        <h4 style="font-size:13.5px;margin-top:12px">B · 左→右流程</h4>
+        <p style="font-size:12px;color:#5A616B;line-height:1.7;margin-top:4px">左输入/主体 → 水平虚线箭头 → 右侧 2–3 个结果标签。适合"配置/生成/转换"类标题。占比约 30%。</p>
+      </div>
+      <div class="card">
+        <svg width="100%" viewBox="0 0 300 190">
+          <rect x="14" y="12" width="272" height="166" rx="16" fill="#F4F8FF" stroke="#E6EFFB"/>
+          <rect x="28" y="26" width="200" height="138" rx="12" fill="#fff"/>
+          <rect x="44" y="46" width="54" height="20" rx="7" fill="#DCE8F8"/>
+          <rect x="132" y="46" width="80" height="20" rx="7" fill="#4A9DFC" opacity=".55"/>
+          <rect x="58" y="76" width="26" height="26" rx="13" fill="#4A9DFC"/>
+          <rect x="92" y="76" width="104" height="30" rx="7" fill="#EDF4FF"/>
+          <rect x="96" y="84" width="80" height="5" rx="2.5" fill="#C9DDF8"/>
+          <rect x="96" y="94" width="58" height="5" rx="2.5" fill="#C9DDF8"/>
+          <rect x="44" y="120" width="152" height="26" rx="13" fill="#fff" stroke="#EDF2F8"/>
+          <rect x="204" y="112" width="86" height="34" rx="10" fill="#fff" stroke="#F2F6FB" style="filter:drop-shadow(0 8px 18px rgba(31,71,141,.14))"/>
+          <rect x="214" y="123" width="10" height="10" rx="3" fill="#4A9DFC"/>
+          <rect x="230" y="125" width="46" height="6" rx="3" fill="#D9E7FA"/>
+        </svg>
+        <h4 style="font-size:13.5px;margin-top:12px">C · 界面隐喻</h4>
+        <p style="font-size:12px;color:#5A616B;line-height:1.7;margin-top:4px">聊天窗 / 表单 / 编辑器 / 进度面板，右侧挂 1–2 个浮标。适合"客服/助手/评测/控制台"类标题。占比约 35%。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section>
+    <div class="sec-head"><span class="num">03</span><h2>配色：一个蓝，一个紫，一点珊瑚</h2></div>
+    <p class="lead">全图色相严格控制在 <strong>200°–250°</strong>，蓝与紫同族，视觉上视为一种颜色。饱和度集中投放于 <strong>20% 面积</strong>（图标瓦片、渐变方块、箭头），其余 80% 是高明度低饱和底。</p>
+    <div class="grid4">
+      <div class="swatch"><div class="chip" style="background:#E6F2FF"></div><div class="info"><b>面板顶</b><code>#E6F2FF</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#F1F7FF"></div><div class="info"><b>面板渐隐</b><code>#F1F7FF</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#4A9DFC"></div><div class="info"><b>主蓝</b><code>#4A9DFC</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#2F7FE8"></div><div class="info"><b>深蓝</b><code>#2F7FE8</code></div></div>
+    </div>
+    <div class="grid4" style="margin-top:16px">
+      <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#4A9DFC,#7C6BF5)"></div><div class="info"><b>渐变主色</b><code>#4A9DFC → #7C6BF5</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#D9E7FA"></div><div class="info"><b>骨架条 / 浅填充</b><code>#D9E7FA</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#C9DFFE"></div><div class="info"><b>虚线连线</b><code>#C9DFFE</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#F58A8A"></div><div class="info"><b>告警珊瑚（唯一暖色）</b><code>#F58A8A</code></div></div>
+    </div>
+    <div class="ratio">
+      <div style="flex:34;background:#EAF3FF;color:#5A7FB0">浅蓝底 34%</div>
+      <div style="flex:46;background:#FFFFFF;color:#9AA4B2;border-top:1px solid #EDF1F7;border-bottom:1px solid #EDF1F7">白 46%</div>
+      <div style="flex:14;background:#4A9DFC;color:#fff">主蓝 14%</div>
+      <div style="flex:6;background:linear-gradient(135deg,#4A9DFC,#7C6BF5);color:#fff">紫 6%</div>
+    </div>
+    <div class="note"><strong>配色纪律：</strong>暖色只允许出现在"告警/风险/异常"语义处（如「告警提示」），且面积 ≤ 0.5%。禁止出现红绿黄等业务色、禁止多色图标混搭——图标统一为蓝色单色线性。</div>
+  </section>
+
+  <!-- 04 -->
+  <section>
+    <div class="sec-head"><span class="num">04</span><h2>光影 · 材质 · 视角</h2></div>
+    <div class="grid3">
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin-bottom:10px">光影</h3>
+        <ul class="checklist" style="list-style:disc">
+          <li>无方向性主光源，<strong>没有投影锥、没有高光</strong></li>
+          <li>只有三级"层高"投影：卡 4/16 · 内卡 8/24 · 浮标 12/32</li>
+          <li>投影色为<strong>深蓝而非黑</strong>：rgba(31,71,141,.05–.13)</li>
+          <li>渐变瓦片下缘带同色柔光晕（blur 20px，透明度 30%）</li>
+          <li>禁止：AO、镜面反射、体积光、镜头光晕</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin-bottom:10px">材质</h3>
+        <ul class="checklist" style="list-style:disc">
+          <li>全部<strong>哑光</strong>，无金属、无玻璃、无木纹</li>
+          <li>唯一"实体感"来自渐变图标瓦片：135° 渐变 + 白色线性图标 + 柔光</li>
+          <li>卡片表面纯色平涂，靠 1px 极淡描边区分边界</li>
+          <li>骨架条：圆角矩形，高 1.2–2%W，宽 15–40%W</li>
+          <li>线框图标：1.5–2px 描边，圆头端点，不填充</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="font-size:15px;font-weight:600;margin-bottom:10px">视角</h3>
+        <ul class="checklist" style="list-style:disc">
+          <li><strong>严格正交正视，0° 透视</strong></li>
+          <li>所有矩形轴对齐，无等距 3D、无倾斜</li>
+          <li>空间感 100% 由层叠偏移 + 阴影提供</li>
+          <li>连线只允许水平或向下分叉，禁止斜穿长线</li>
+          <li>无地平线、无场景背景、无环境</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section>
+    <div class="sec-head"><span class="num">05</span><h2>氛围</h2></div>
+    <p class="lead">洁净、克制、可信、轻科技。<strong>企业级 SaaS 的技术说明书气质</strong>——克制到近乎冷淡，靠结构与留白建立秩序感，不靠色彩与特效制造情绪。<br>它讲的是"这个东西怎么运作"，而不是"这个东西多酷"。没有人物、没有表情、没有戏剧性，因此可以被无限次复用而不产生审美疲劳。</p>
+    <div class="grid4">
+      <div class="card" style="padding:20px"><div style="font-size:11px;color:#9AA4B2;letter-spacing:.1em">情绪温度</div><div style="font-size:14px;margin-top:6px">冷静 · 理性 · 无煽动</div></div>
+      <div class="card" style="padding:20px"><div style="font-size:11px;color:#9AA4B2;letter-spacing:.1em">信息密度</div><div style="font-size:14px;margin-top:6px">中低 · 一图一件事</div></div>
+      <div class="card" style="padding:20px"><div style="font-size:11px;color:#9AA4B2;letter-spacing:.1em">画面留白</div><div style="font-size:14px;margin-top:6px">≥ 8% 四周 · ≥ 25% 内部</div></div>
+      <div class="card" style="padding:20px"><div style="font-size:11px;color:#9AA4B2;letter-spacing:.1em">叙事方式</div><div style="font-size:14px;margin-top:6px">抽象结构 · 非场景叙事</div></div>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section>
+    <div class="sec-head"><span class="num">06</span><h2>元素库（9 个可复用零件）</h2></div>
+    <p class="lead">所有 14 张图都能拆解为这 9 个零件。复现时只需按版式把它们摆进去。</p>
+    <div class="grid3" style="gap:16px">
+      <div class="el"><div class="stage">
+        <div class="tile"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"><rect x="4" y="7" width="16" height="12" rx="4"/><circle cx="9.5" cy="13" r="1.4" fill="#fff" stroke="none"/><circle cx="14.5" cy="13" r="1.4" fill="#fff" stroke="none"/><path d="M12 7V4"/><circle cx="12" cy="3" r="1.3"/></svg></div>
+      </div><h4>渐变图标瓦片</h4><p>圆角 22–24%，尺寸 10–14%W，135° 蓝紫渐变 + 白色线性图标 + 下缘柔光</p></div>
+
+      <div class="el"><div class="stage"><div class="floatchip"><span class="dot"></span>重构建议</div></div>
+        <h4>浮动标签</h4><p>白底 + 轻投影 + 左侧小图标 + 4–6 字标签，破框放置</p></div>
+
+      <div class="el"><div class="stage"><div class="drawer"><div class="skel" style="width:80px"></div><div class="skel" style="width:52px"></div><div class="skel" style="width:66px"></div></div></div>
+        <h4>骨架条</h4><p>浅蓝/浅灰圆角矩形，模拟文本、代码、列表内容</p></div>
+
+      <div class="el"><div class="stage">
+        <svg width="100" height="46" viewBox="0 0 100 46">
+          <line x1="4" y1="30" x2="58" y2="30" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="6 6"/>
+          <line x1="58" y1="30" x2="58" y2="10" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="6 6"/>
+          <line x1="58" y1="10" x2="90" y2="10" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="6 6"/>
+          <path d="M96 10 l-8 -4 v8 z" fill="#7FB3FF"/>
+        </svg></div><h4>虚线连接</h4><p>1.5–2px，dash 6/6，末端小三角箭头，只水平或向下</p></div>
+
+      <div class="el"><div class="stage"><div class="orbit"><div class="node"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg></div></div></div>
+        <h4>同心虚线圆</h4><p>2–3 圈极淡 #C9DFFE 轨道圆，用于"能力辐射/生态"语义</p></div>
+
+      <div class="el"><div class="stage"><div class="node"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC" stroke-width="2"><circle cx="12" cy="7" r="3"/><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path d="M12 10v4M10 15l-2 1M14 15l2 1"/></svg></div></div>
+        <h4>圆角方块节点</h4><p>白底 + 1px 淡描边 + 内部蓝色小图标，作为流程节点</p></div>
+
+      <div class="el"><div class="stage"><div class="ring"><i></i></div></div>
+        <h4>环形进度</h4><p>2/3 圆环渐变描边，中心留白或放图标，用于评测/完成度</p></div>
+
+      <div class="el"><div class="stage">
+        <svg width="90" height="50" viewBox="0 0 90 50">
+          <line x1="4" y1="25" x2="34" y2="25" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="5 5"/>
+          <path d="M34 10 h10 v30 h-10" fill="none" stroke="#7FB3FF" stroke-width="2"/>
+          <line x1="44" y1="10" x2="70" y2="10" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="5 5"/>
+          <line x1="44" y1="40" x2="70" y2="40" stroke="#C9DFFE" stroke-width="2" stroke-dasharray="5 5"/>
+          <path d="M76 10 l-7 -3.5 v7 z" fill="#7FB3FF"/><path d="M76 40 l-7 -3.5 v7 z" fill="#7FB3FF"/>
+        </svg></div><h4>括号式分叉</h4><p>右侧一分为二用 ⌐ 形括线，比两条独立箭头更整洁</p></div>
+
+      <div class="el"><div class="stage"><div class="pill-grad">多语言无缝跨越</div></div>
+        <h4>渐变文字胶囊</h4><p>蓝紫渐变填充 + 白色文字，只用于一句主 slogan，全图 ≤1 个</p></div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section>
+    <div class="sec-head"><span class="num">07</span><h2>文字规范</h2></div>
+    <div class="card">
+      <table>
+        <tr><th style="width:22%">层级</th><th style="width:22%">字号</th><th style="width:26%">颜色 / 字重</th><th>说明</th></tr>
+        <tr><td>主标题</td><td class="mono">3.5–4.5% W</td><td>#191919 / Semibold</td><td>左上角，距面板边缘 4%W、3%H</td></tr>
+        <tr><td>模块标题</td><td class="mono">2.6% W</td><td>#191919 / Medium</td><td>卡片内标题，如「测评结果」「培训内容」</td></tr>
+        <tr><td>标签文字</td><td class="mono">2.2% W</td><td>#191919 / Medium</td><td>浮标、chip、按钮内文字</td></tr>
+        <tr><td>正文 / 对话</td><td class="mono">2.0% W</td><td>#5A616B / Regular</td><td>仅在"聊天界面"型出现，行高 1.6</td></tr>
+      </table>
+      <div class="note">字体：中文用思源黑体 / 苹方 / 微软雅黑；英文与技术名词（Easy Dataset、Namespace、Data ID、Python、C++、MCP）同字号无衬线混排，不换字体、不加粗。<strong>原则：除渐变胶囊外，所有文字均为黑或深灰，不使用彩色文字。</strong></div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section>
+    <div class="sec-head"><span class="num">08</span><h2>复现配方：标题 → 版式</h2></div>
+    <p class="lead">只给标题时，按关键词自动选择版式骨架，再填充零件。这张表覆盖了样本中 100% 的构图决策。</p>
+    <div class="card">
+      <table>
+        <tr><th style="width:30%">标题关键词</th><th style="width:24%">版式</th><th>主体零件组合</th></tr>
+        <tr><td>管理 / 中心 / 注册 / 发现 / 编排</td><td>A 中心辐射</td><td>渐变瓦片居中 → 3 虚线向下 → 3 圆角节点 + 右侧浮标</td></tr>
+        <tr><td>配置 / 参数 / 标识 / 表单</td><td>B 左→右</td><td>环形 logo（同心虚线圆）→ 水平虚线箭头 → 右侧表单卡</td></tr>
+        <tr><td>客服 / 助手 / 问答 / 对话</td><td>C 界面隐喻</td><td>聊天窗（气泡 + 头像 + 输入框 + 发送按钮）+ 右侧浮标</td></tr>
+        <tr><td>评测 / 测评 / 评分 / 效果</td><td>C 界面隐喻</td><td>环形进度 + 按钮 + 三条进度条 + 右侧浮标</td></tr>
+        <tr><td>多语言 / 生态 / Hub / 兼容 / 跨栈</td><td>A 环形轨道</td><td>中心芯片图标 + 同心虚线圆 + 外围 4–5 个语言胶囊 + 渐变 slogan</td></tr>
+        <tr><td>生成 / 转换 / 整理 / 构建 / 流程</td><td>B 左→右 或 三栏</td><td>输入卡 → 渐变瓦片 → 输出卡（三栏等宽）</td></tr>
+        <tr><td>部署 / 私有化 / 本地 / 安全</td><td>B 左→右</td><td>虚线圆环 + 服务器图标 + 左下灰底标签 + 右侧文档卡 + 浮标</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section>
+    <div class="sec-head"><span class="num">09</span><h2>生成提示词模板（AI 生图版）</h2></div>
+    <p class="lead">把 <span class="mono">{TITLE}</span> <span class="mono">{HERO}</span> <span class="mono">{LABELS}</span> 替换后直接投喂 gpt-image-2.6。用于需要插画质感的补充图。</p>
+    <pre><span class="c">// ===== PROMPT =====</span>
+Flat vector product scenario illustration, aspect ratio 11:7, pure white background.
+
+A stack of three rounded-rectangle panels offset diagonally down-right: an outer pure-white card
+with a very soft diffuse blue-tinted shadow, a middle panel with a subtle vertical gradient from
+pale blue <span class="k">#E6F2FF</span> to near-white <span class="k">#F9FAFF</span>, and an inner pure-white content card with a
+hairline <span class="k">#F0F5FB</span> border.
+
+Top-left corner: near-black <span class="k">#191919</span> semibold sans-serif title "<span class="v">{TITLE}</span>".
+
+Center: <span class="v">{HERO}</span> drawn as a rounded square tile (22% corner radius) filled with a 135-degree
+gradient from <span class="k">#4A9DFC</span> to <span class="k">#7C6BF5</span>, containing a single white 2px line icon, with a soft
+same-color glow beneath it.
+
+From the hero, three thin dashed light-blue <span class="k">#C9DFFE</span> connectors with small arrowheads fan
+downward to three white rounded chips, each holding a tiny monochrome blue line icon and a short
+label: <span class="v">{LABELS}</span>.
+
+One or two white floating label cards break out past the panel's right edge, carrying a stronger
+soft shadow and a 4-6 character keyword label.
+
+Palette strictly: white, <span class="k">#E6F2FF</span>, <span class="k">#4A9DFC</span>, <span class="k">#7C6BF5</span>, <span class="k">#D9E7FA</span>. A single tiny coral <span class="k">#F58A8A</span>
+accent only if the label means warning.
+
+Flat matte vector: absolutely no perspective, no 3D, no isometric, no people, no photographic
+texture, no metallic or glass, no background gradient or vignette, no neon, no glow bloom.
+Crisp 1.5-2px strokes, generous white margins, high-key even lighting, enterprise SaaS aesthetic,
+clean, restrained, minimal, technical-diagram clarity.
+
+<span class="c">// ===== NEGATIVE =====</span>
+photo, 3d render, isometric, perspective, people, hands, faces, dark mode, neon, glossy,
+metallic, glass reflection, bokeh, vignette, gradient mesh background, cluttered, busy,
+drop shadow cast in one direction, text artifacts, watermark, low contrast, warm colors</pre>
+    <div class="note warn"><strong>重要判断：</strong>样本图中的文字、标签、图标位置极其精确，<strong>扩散模型无法稳定复刻</strong>——它会把「分钟级完成转写」「Namespace」这类文字画糊。若要真正"可复现"，请用 HTML/SVG 按本规范的 token 直接渲染，文字永远清晰、可改、可批量。<br>AI 生图只适合做无文字的氛围底图或补充插画，不适合做带标签的信息图。</div>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <div class="sec-head"><span class="num">10</span><h2>自检清单</h2></div>
+    <div class="card">
+      <ul class="checklist" style="list-style:disc">
+        <li>画布是 11:7 纯白、四边留白 ≥8% 吗？</li>
+        <li>是否至少有 3 层嵌套（白壳 + 淡蓝面板 + 内容白卡），且逐层向右下偏移 8–14px？</li>
+        <li>全图色相是否只在 200°–250°（蓝→紫）？有没有混入绿/橙/黄？</li>
+        <li>是否恰好有 1 个渐变图标瓦片作为视觉主体，且面积 10–14%W？</li>
+        <li>有没有 1–2 个浮标破框而出、投影明显更重？</li>
+        <li>连线是否全是 1.5–2px 浅蓝虚线，只水平或向下？</li>
+        <li>是否有任何透视、3D、等距、渐变背景、真实照片元素？（有则不合格）</li>
+        <li>文字是否全部黑色/深灰，只有渐变胶囊可白字？</li>
+        <li>画面里是否出现人物、场景、环境？（有则不合格）</li>
+        <li>整张图是否只讲一件事、信息密度中低？</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="foot">华为云场景图 · 视觉风格指南 v1.0 · 基于 14 张样本逆向归纳</p>
+</div>
+</body>
+</html>

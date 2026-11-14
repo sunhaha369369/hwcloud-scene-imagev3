@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- v2 模板 · B 左→右流程（此处用「上→下分叉」变体） -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1760px;height:1120px;overflow:hidden;background:#FFFFFF;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;-webkit-font-smoothing:antialiased;}
+  .canvas{position:relative;width:1760px;height:1120px;background:#FFFFFF;}
+
+  .shell{position:absolute;left:110px;top:66px;width:1520px;height:968px;border-radius:62px;
+    background:#FFFFFF;box-shadow:0 22px 60px rgba(31,71,141,.085),0 4px 14px rgba(31,71,141,.04);}
+  .panel{position:absolute;left:140px;top:96px;width:1460px;height:908px;border-radius:50px;
+    background:linear-gradient(180deg,#E4F1FF 0%,#E9F4FF 34%,#F2F9FF 74%,#F5FAFF 100%);
+    border:1px solid #E2EEFD;}
+  .title{position:absolute;left:190px;top:132px;font-size:76px;font-weight:600;color:#191919;letter-spacing:.5px;line-height:1.25;}
+  .content{position:absolute;left:180px;top:240px;width:1310px;height:644px;border-radius:40px;
+    background:#FFFFFF;border:1px solid #F0F5FB;box-shadow:0 10px 30px rgba(31,71,141,.05);}
+
+  /* 输入胶囊 */
+  .input{position:absolute;left:490px;top:274px;width:690px;height:136px;border-radius:68px;
+    background:#FFFFFF;border:3px solid #DCE9F9;box-shadow:0 10px 26px rgba(31,71,141,.08);
+    display:flex;align-items:center;padding-left:34px;}
+  .input .q{font-size:48px;color:#5A616B;margin-left:22px;white-space:nowrap;letter-spacing:.5px;}
+
+  /* 主视觉瓦片 */
+  .hero{position:absolute;left:735px;top:452px;width:200px;height:200px;border-radius:52px;
+    background:linear-gradient(135deg,#4A9DFC 0%,#5E92F9 45%,#7C6BF5 100%);
+    box-shadow:0 20px 44px rgba(74,157,252,.42),0 0 48px 10px rgba(124,107,245,.16);
+    display:flex;align-items:center;justify-content:center;}
+
+  /* 输出卡 */
+  .chip{position:absolute;width:360px;height:120px;border-radius:32px;background:#FFFFFF;
+    border:3px solid #C9DCF2;box-shadow:0 8px 22px rgba(31,71,141,.06);
+    display:flex;align-items:center;padding-left:28px;}
+  .chip .tx{margin-left:22px;font-size:50px;font-weight:500;color:#191919;white-space:nowrap;letter-spacing:1px;}
+
+  .badge{position:absolute;left:1218px;top:278px;width:322px;height:128px;border-radius:32px;background:#FFFFFF;
+    box-shadow:0 20px 48px rgba(31,71,141,.16),0 3px 8px rgba(31,71,141,.06);
+    display:flex;align-items:center;padding-left:28px;}
+  .badge .tx{margin-left:14px;font-size:44px;font-weight:500;color:#191919;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="shell"></div>
+  <div class="panel"></div>
+  <div class="title">文档配图生成</div>
+  <div class="content"></div>
+
+  <!-- 连线：输入→瓦片→三分叉 -->
+  <svg width="1760" height="1120" style="position:absolute;left:0;top:0;">
+    <g stroke="#A9C7EC" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M835 410 V438"/>
+      <!-- 分叉：竖线落到枢纽点 (835,690)，再由左右两段总线分别出去。
+           不要写成一条 path 转弯（M835 652 V690 H435 V716）——
+           那样总线只覆盖到最左支线，右侧支线就悬空了。 -->
+      <path d="M835 652 V690"/>
+      <path d="M835 690 H435"/>
+      <path d="M835 690 H1235"/>
+      <path d="M435 690 V716"/>
+      <path d="M835 690 V716"/>
+      <path d="M1235 690 V716"/>
+    </g>
+    <g fill="#A9C7EC">
+      <path d="M827 438 h16 l-8 14 z"/>
+      <path d="M427 716 h16 l-8 14 z"/>
+      <path d="M827 716 h16 l-8 14 z"/>
+      <path d="M1227 716 h16 l-8 14 z"/>
+    </g>
+  </svg>
+
+  <div class="input">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h6"/>
+    </svg>
+    <div class="q">画一张订单支付的时序图</div>
+  </div>
+
+  <div class="hero">
+    <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3.5" y="3" width="17" height="18" rx="3"/>
+      <path d="M8 15.5v-3"/><path d="M12 15.5v-6"/><path d="M16 15.5v-4.5"/>
+    </svg>
+  </div>
+
+  <div class="chip" style="left:255px;top:730px;">
+    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4v16"/><path d="M9 4v16" stroke-dasharray="3 3"/>
+      <path d="M15 7h5"/><path d="M15 13h5"/><path d="M15 19h5"/>
+    </svg>
+    <div class="tx">时序图</div>
+  </div>
+
+  <div class="chip" style="left:655px;top:730px;">
+    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="8" height="7" rx="2"/>
+      <rect x="13" y="13" width="8" height="7" rx="2"/>
+      <path d="M11 7.5h4a2 2 0 0 1 2 2v3.5"/>
+    </svg>
+    <div class="tx">ER 图</div>
+  </div>
+
+  <div class="chip" style="left:1055px;top:730px;">
+    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/>
+      <path d="M9 11l6-3.5"/><path d="M9 13l6 3.5"/>
+    </svg>
+    <div class="tx">状态机</div>
+  </div>
+
+  <div class="badge">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#4A9DFC"
+         stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 3l1.9 4.6L17.5 9.5l-4.6 1.9L11 16l-1.9-4.6L4.5 9.5l4.6-1.9z"/>
+      <path d="M18 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/>
+    </svg>
+    <div class="tx">一键插入</div>
+  </div>
+
+</div>
+</body>
+</html>
