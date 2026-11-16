@@ -14,6 +14,13 @@
 file:// 下会被浏览器按跨域拦掉，headless 截图直接没有图标。
 所以改完图标库、或模板里换了图标，都要跑一次 --pack 让内联副本跟上；
 页面里预先写 `<!--SPRITE-->` 占位也行，--pack 会把它替换掉。
+
+--pack 的两个前提，别顺手改掉：
+  1. 定位一律在「屏蔽掉 <!-- --> 之后」的文本上做。注释里常写着 `<svg>…</svg>`
+     用法示例，直接 find("</svg>") 会切在注释中间，把 sprite 截断、留下孤立的 symbol。
+  2. sprite 的结尾靠 <svg> 标签配平来找，不是找第一个 </svg>——正文里到处是小 svg。
+写完会做一次结构自检（配平 / symbol 是否都在 svg 内 / 数目是否等于引用数），
+不通过就报错、原文件不动。
 """
 import os
 import re
@@ -161,6 +168,72 @@ def symbol_map(svg):
 SPRITE_OPEN = '<svg xmlns="http://www.w3.org/2000/svg" style="display:none"'
 PLACEHOLDER = "<!--SPRITE-->"
 
+COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+SVG_TAG_RE = re.compile(r"<svg\b[^>]*>|</svg>")
+
+
+def mask_comments(text):
+    """返回与 text 等长的副本，把 <!-- --> 里的字符换成空格（换行保留）。
+
+    页面顶部的使用说明注释里常常写着 `<svg>…</svg>` 的用法示例，
+    在原文上 text.index("</svg>") 会撞进注释，把 sprite 块截断在半路——
+    pack 第一版就是这么把 50 枚 symbol 留在 svg 外面的。
+    所以一切定位都必须在 mask 过的文本上做，再用相同下标去切原文。
+    """
+    out = list(text)
+    for m in COMMENT_RE.finditer(text):
+        for i in range(m.start(), m.end()):
+            if out[i] != "\n":
+                out[i] = " "
+    return "".join(out)
+
+
+def sprite_span(text):
+    """找「内部含 <symbol> 的最外层 <svg> 元素」，返回 (start, end)；没有则 None。
+
+    用标签配平来找结尾，而不是找第一个 </svg>——symbol 里可能嵌着 <svg>，
+    模板正文里也有一堆独立的小 svg，找第一个必然切错。
+    """
+    masked = mask_comments(text)
+    depth, start = 0, None
+    for m in SVG_TAG_RE.finditer(masked):
+        if m.group(0) == "</svg>":
+            depth -= 1
+            if depth == 0 and start is not None:
+                if "<symbol" in masked[start:m.end()]:
+                    return start, m.end()
+                start = None
+            elif depth < 0:          # 多余的 </svg>，重新开始配对
+                depth, start = 0, None
+        else:
+            if depth == 0:
+                start = m.start()
+            depth += 1
+    return None
+
+
+def check_markup(text, expect_symbols):
+    """打包后的结构自检，返回出错描述；没问题返回空串。"""
+    opens = len(re.findall(r"<svg\b", text))
+    closes = len(re.findall(r"</svg>", text))
+    if opens != closes:
+        return "svg 开/闭标签不平衡（%d 开 / %d 闭）" % (opens, closes)
+    masked = mask_comments(text)
+    stray = 0
+    # 逐枚确认 symbol 都落在某个 svg 元素内
+    for m in re.finditer(r"<symbol\b", masked):
+        depth = 0
+        for t in SVG_TAG_RE.finditer(masked, 0, m.start()):
+            depth += -1 if t.group(0) == "</svg>" else 1
+        if depth <= 0:
+            stray += 1
+    if stray:
+        return "%d 枚 symbol 落在 svg 之外" % stray
+    got = len(re.findall(r"<symbol\b", masked))
+    if got != expect_symbols:
+        return "symbol 数 %d，应为 %d" % (got, expect_symbols)
+    return ""
+
 
 def pack(paths):
     """把每个 html 里 <use href="#i-xxx"> 真正引用到的图标内联进去。"""
@@ -174,7 +247,7 @@ def pack(paths):
         with open(path, encoding="utf-8") as f:
             text = f.read()
         used = []
-        for m in re.finditer(r'href="#(i-[a-z0-9-]+)"', text):
+        for m in re.finditer(r'href="#(i-[a-z0-9-]+)"', mask_comments(text)):
             if m.group(1) not in used:
                 used.append(m.group(1))
         unknown = [i for i in used if i not in smap]
@@ -194,13 +267,19 @@ def pack(paths):
 
         if PLACEHOLDER in text:
             new = text.replace(PLACEHOLDER, block)
-        elif SPRITE_OPEN in text:
-            start = text.index(SPRITE_OPEN)
-            end = text.index("</svg>", start) + len("</svg>")
-            new = text[:start] + block + text[end:]
         else:
-            print("[!] %s 里既没有 sprite 也没有 %s 占位，跳过"
-                  % (os.path.basename(path), PLACEHOLDER))
+            span = sprite_span(text)
+            if span is None:
+                print("[!] %s 里既没有 sprite 也没有 %s 占位，跳过"
+                      % (os.path.basename(path), PLACEHOLDER))
+                continue
+            new = text[:span[0]] + block + text[span[1]:]
+
+        problem = check_markup(new, len(used))
+        if problem:
+            print("[x] %s 打包后结构异常：%s；已跳过，原文件未改"
+                  % (os.path.basename(path), problem))
+            rc = 1
             continue
         with open(path, "w", encoding="utf-8", newline="") as f:
             f.write(new)
