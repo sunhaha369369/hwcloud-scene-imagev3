@@ -1,6 +1,6 @@
 ---
 name: hwcloud-scene-image
-description: 生成「产品场景图」——扁平矢量 UI 示意图风格的 1760×1120 PNG。特征为纯白画布、三层嵌套圆角卡片、蓝紫 135° 渐变、严格 0° 透视、无人物无照片。提供 v2（卡片 + 短标签）与 v3（大图标 / 圆形节点 / 图形装置，文字极少）两种取向，内置 50 枚线性图标与 15 件图形零件。核心约束是「缩略可读」：图会被放进网页卡片缩到 240px 宽显示。当需要为产品功能、方案卖点、技术能力配一张风格统一、可直接放进 PPT / 官网 / 产品页的示意图，或需要按标题批量产出同风格图示时使用。触发关键词：场景图、产品场景图、功能场景图、示意图、配图、图标化示意图、图形化配图、扁平矢量插画、flat vector product illustration、product scenario illustration。
+description: 生成「产品场景图」——扁平矢量 UI 示意图风格的 1760×1120 PNG。特征为纯白画布、三层嵌套圆角卡片、蓝紫 135° 渐变、严格 0° 透视、无人物无照片。提供 v2（卡片 + 短标签）与 v3（大图标 / 圆形节点 / 图形装置，文字极少）两种取向，内置 100 枚线性图标与 30 件图形零件（分两页）。核心约束是「缩略可读」：图会被放进网页卡片缩到 240px 宽显示。当需要为产品功能、方案卖点、技术能力配一张风格统一、可直接放进 PPT / 官网 / 产品页的示意图，或需要按标题批量产出同风格图示时使用。触发关键词：场景图、产品场景图、功能场景图、示意图、配图、图标化示意图、图形化配图、扁平矢量插画、flat vector product illustration、product scenario illustration。
 ---
 
 # 产品场景图生成器 · v2 / v3
@@ -152,26 +152,28 @@ v3 只换三件事——去掉内容白卡、把图标放大三倍、让图形�
 2. **图标 ≥ 84px**。视觉线宽 = `stroke × 显示尺寸 / 24`，目标 7–9px（缩到 240px 时约 1px）。
 3. **标签 ≤ 4 处**，每处 2–3 字。超过 4 处，说明你还在用文字讲事情——回去把那条信息画成图形。
 
-### 图标库（50 枚）
+### 图标库（100 枚 / 5 组）
 
-`assets/icons.svg` 是 sprite。**把整段内容内联**到页面里才能用：
-
-```html
-<body>
-  <!-- 把 assets/icons.svg 的全部内容粘在这里 -->
-  <svg><use href="#i-database"/></svg>
-</body>
-```
-
-外部引用（`<use href="icons.svg#i-database"/>`）在 `file://` 下会被浏览器按跨域拦掉，
-headless 截图里图标会**整片消失**且不报错。
+`assets/icons.svg` 是 sprite。外部引用（`<use href="icons.svg#i-database"/>`）在 `file://` 下会被浏览器按跨域拦掉，headless 截图里图标会**整片消失**且不报错，所以必须内联。内联交给 `--pack`：
 
 ```bash
-python <SKILL_DIR>/scripts/iconlib.py --list            # 按分组列出全部 id
-python <SKILL_DIR>/scripts/iconlib.py --preview p.png   # 生成图标墙，挑图标用
+python <SKILL_DIR>/scripts/iconlib.py --pack <你的模板.html>
 ```
 
-分组：图表 / 图示 12 枚 · 技术元素 15 枚 · AI 与内容 18 枚 · 交互 5 枚。
+- 页面里预先写一行 `<!--SPRITE-->` 占位，`--pack` 会替换成「本页实际引用到的那几个 symbol」
+- 页面里已有 sprite 也可以直接跑，会被就地重写成只留用到的
+- 换过图标、加过图标之后都要再跑一次，否则内联副本是旧的
+
+挑图标：
+
+```bash
+python <SKILL_DIR>/scripts/iconlib.py --list                    # 全部，按组分
+python <SKILL_DIR>/scripts/iconlib.py --list 图表                # 只看某组
+python <SKILL_DIR>/scripts/iconlib.py --preview p.png           # 整墙，核对形状
+python <SKILL_DIR>/scripts/iconlib.py --preview p.png --group AI # 只看一组
+```
+
+分组：图表 / 图示 25 · 技术 / 基础设施 31 · AI / 智能 15 · 内容 / 协作 14 · 交互 / 状态 15。
 
 symbol 内**不写 stroke-width**，按显示尺寸配：
 
@@ -182,13 +184,20 @@ symbol 内**不写 stroke-width**，按显示尺寸配：
 | 170–190 | 1.3 |
 
 找不到合适的就换一枚近似的，**不要临时手画新形状**——线条风格一不统一，整图立刻露馅。
+真觉得缺枚图标，加进 `icons.svg`（24 网格、内容留 2.2–21.8 边距、不写 stroke-width），跑 `--preview` 确认画对了再用。
 
-### 元素零件（15 件）
+### 元素零件（30 件 / 两页）
 
-`assets/parts.html` 是一页零件墙，每件都有实物 + class 名 + 尺寸，直接抄 HTML + CSS：
+- `assets/parts.html` — **基础 15 件**：渐变瓦片 · 白圆徽章 · 破框浮标 · 标签胶囊 · 窗口框 · 层堆叠 · 渐变箭头 · 虚线连接 · 选中手柄 · 指令气泡 · 环形进度 · 微柱图 · 点阵底纹 · 星芒 · 选中瓦片
+- `assets/parts-ext.html` — **扩展 15 件**：进度条 · 状态点 · 编号圆 · 角标卡 · 头像组 · 列表行 · 提示条 · 图例 · 枢纽点 · 双向箭头 · 弧线连接 · 网格底纹 · 柔光 · 同心波纹 · 玻璃卡
 
-渐变瓦片 · 白圆徽章 · 破框浮标 · 标签胶囊 · 窗口框 · 层堆叠 · 渐变箭头 · 虚线连接 ·
-选中手柄 · 指令气泡 · 环形进度 · 微柱图 · 点阵底纹 · 星芒 · 选中瓦片。
+每件都有实物 + class 名 + 尺寸，直接抄 HTML + CSS。新增的三件连接件用法：
+
+- **枢纽点** — 分叉处放一个白心蓝环圆点，比裸线交叉清楚得多
+- **双向箭头** — 同步、双向同步这类语义
+- **弧线连接** — 直线会压住文字或别的元素时绕过去
+
+单页最多摆 15 格（5 列 × 3 行）；超过就另起一页，别缩小格子，缩了就看不清。
 
 ### 两套版式
 
@@ -302,8 +311,9 @@ SKILL.md
 │   ├── layouts.md         五种版式的骨架图、适用场景、元素配方
 │   └── checklist.md       交付前逐条核对（含 240px 缩略验收、v3 专用项）
 ├── assets/
-│   ├── icons.svg          50 枚线性图标 sprite（内联进页面后 <use href="#i-xxx"/>）
-│   ├── parts.html         15 件图形零件墙，可看也可抄
+│   ├── icons.svg          100 枚线性图标 sprite（用 --pack 内联，页面里 <use href="#i-xxx"/>）
+│   ├── parts.html         基础零件墙 15 件，可看也可抄
+│   ├── parts-ext.html     扩展零件墙 15 件（数据 / 状态 / 界面 / 装饰）
 │   ├── template-d-orbit.html      D 核心分支（v3）
 │   ├── template-e-pipeline.html   E 圆形流水线（v3）
 │   ├── _blank-shell.html          只有壳层，从零搭版式时用
@@ -314,7 +324,7 @@ SKILL.md
 │   ├── render.py          HTML → 1760×1120 PNG（路径处理 + 浏览器探测 + 连线检查）
 │   ├── linklint.py        检查每根连线的端点是否悬空（render.py 会自动调用）
 │   ├── preview.py         生成 240px 缩略图，用于"缩略自检"
-│   └── iconlib.py         列图标 id / 生成图标墙
+│   └── iconlib.py         列图标 / 生图标墙 / --pack 内联
 └── examples/              5 张成品图 + 可渲染源文件，仅供参照，不参与生成
 ```
 

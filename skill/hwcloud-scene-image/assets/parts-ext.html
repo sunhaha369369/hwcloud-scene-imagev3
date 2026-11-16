@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v3 元素零件库 · 扩展页 parts-ext
+  与 parts.html 同一套骨架、同一套 token，只是零件不同：
+  基础页放"形状 / 容器 / 连接"，这一页放"数据 / 状态 / 界面 / 装饰"。
+  渲染：python scripts/render.py assets/parts-ext.html parts-ext.png
+-->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1760px;height:1120px;overflow:hidden;background:#FFFFFF;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Source Han Sans SC",sans-serif;-webkit-font-smoothing:antialiased;}
+  .canvas{position:relative;width:1760px;height:1120px;background:#FFFFFF;}
+
+  .shell{position:absolute;left:110px;top:66px;width:1520px;height:968px;border-radius:62px;
+    background:#FFFFFF;box-shadow:0 22px 60px rgba(31,71,141,.085),0 4px 14px rgba(31,71,141,.04);}
+  .panel{position:absolute;left:140px;top:96px;width:1460px;height:908px;border-radius:50px;overflow:hidden;
+    background:linear-gradient(180deg,#E4F1FF 0%,#E9F4FF 34%,#F2F9FF 74%,#F5FAFF 100%);
+    border:1px solid #E2EEFD;}
+  .dots{position:absolute;left:0;top:0;width:1460px;height:908px;
+    background-image:radial-gradient(circle at 1px 1px,#C7DDF7 2.2px,transparent 2.4px);
+    background-size:48px 48px;opacity:.42;}
+
+  .head{position:absolute;left:190px;top:120px;font-size:56px;font-weight:600;color:#191919;letter-spacing:1px;}
+  .sub{position:absolute;left:192px;top:196px;font-size:26px;color:#6C7A8C;letter-spacing:.5px;}
+
+  .grid{position:absolute;left:186px;top:238px;width:1370px;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:14px 18px;}
+  .cell{height:240px;background:rgba(255,255,255,.72);border:1px solid #E4F0FD;border-radius:26px;
+    display:flex;flex-direction:column;align-items:center;}
+  .stage{height:152px;width:100%;display:flex;align-items:center;justify-content:center;position:relative;}
+  .nm{font-size:25px;font-weight:600;color:#1F3556;letter-spacing:.5px;}
+  .sz{font-size:20px;color:#8494A6;margin-top:5px;font-family:Consolas,monospace;}
+
+  /* ========== 零件区 ========== */
+  /* 1 进度条 */
+  .prog{width:170px;height:14px;border-radius:7px;background:#E1EEFD;overflow:hidden;
+    box-shadow:inset 0 1px 2px rgba(31,71,141,.07);}
+  .prog i{display:block;height:100%;width:62%;border-radius:7px;
+    background:linear-gradient(90deg,#4A9DFC,#7C6BF5);}
+
+  /* 2 状态点：亮 → 次 → 暗，靠光晕区分数值，不引入第二套色相 */
+  .st{display:flex;gap:26px;align-items:center;}
+  .st i{width:22px;height:22px;border-radius:50%;background:#4A9DFC;display:block;
+    box-shadow:0 0 0 7px rgba(74,157,252,.16);}
+  .st i:nth-child(2){background:#7C6BF5;box-shadow:0 0 0 7px rgba(124,107,245,.14);}
+  .st i:nth-child(3){background:#B7D5F4;box-shadow:none;}
+
+  /* 3 编号圆 */
+  .num{width:66px;height:66px;border-radius:50%;background:#fff;border:3px solid #CFE0F4;
+    box-shadow:0 10px 24px rgba(31,71,141,.10);display:flex;align-items:center;justify-content:center;
+    font-size:29px;font-weight:600;color:#2E6FCB;letter-spacing:0;}
+  .num.on{background:linear-gradient(135deg,#4A9DFC,#7C6BF5);border-color:transparent;
+    color:#fff;box-shadow:0 12px 26px rgba(74,157,252,.38);}
+
+  /* 4 角标卡：标签骑在卡片左上角，是"卡片有身份"的最省字写法 */
+  .tc{position:relative;width:160px;height:118px;border-radius:24px;background:#fff;
+    border:2px solid #DDEBFB;box-shadow:0 12px 28px rgba(31,71,141,.10);
+    display:flex;align-items:center;justify-content:center;}
+  .tc svg{width:56px;height:56px;color:#4A9DFC;stroke-width:1.8;}
+  .tc b{position:absolute;left:-12px;top:-15px;height:40px;padding:0 16px;border-radius:20px;
+    background:linear-gradient(135deg,#4A9DFC,#7C6BF5);color:#fff;font-size:20px;font-weight:600;
+    display:flex;align-items:center;letter-spacing:1px;}
+
+  /* 5 头像组 */
+  .avs{display:flex;align-items:center;}
+  .avs i{width:58px;height:58px;border-radius:50%;background:#E3F0FE;border:4px solid #fff;
+    display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;
+    color:#2E6FCB;margin-left:-16px;box-shadow:0 6px 16px rgba(31,71,141,.10);font-style:normal;}
+  .avs i:first-child{margin-left:0;background:linear-gradient(135deg,#4A9DFC,#7C6BF5);color:#fff;}
+  .avs u{width:58px;height:58px;border-radius:50%;background:#F1F8FF;border:3px dashed #B7D5F4;
+    margin-left:-16px;display:flex;align-items:center;justify-content:center;
+    font-size:24px;color:#7FAEF0;text-decoration:none;}
+
+  /* 6 列表行：图标 + 主文字 + 副文字 + 箭头，v3 里唯一允许出现两级文字的小件 */
+  .lrow{width:216px;height:66px;border-radius:18px;background:#fff;border:2px solid #E4F0FD;
+    display:flex;align-items:center;padding:0 15px;box-shadow:0 8px 20px rgba(31,71,141,.08);}
+  .lrow svg{width:32px;height:32px;color:#4A9DFC;stroke-width:2;flex:none;}
+  .lrow .t{flex:1;margin-left:11px;font-size:22px;font-weight:600;color:#1F3556;line-height:1.25;}
+  .lrow .t em{display:block;font-style:normal;font-size:17px;font-weight:400;color:#8494A6;}
+  .lrow .cx{font-size:26px;color:#B7D5F4;font-weight:400;}
+
+  /* 7 提示条 */
+  .toast{position:relative;width:248px;height:64px;border-radius:18px;background:#fff;
+    box-shadow:0 14px 32px rgba(31,71,141,.15);display:flex;align-items:center;
+    padding:0 20px 0 26px;font-size:22px;color:#1F3556;}
+  .toast:before{content:"";position:absolute;left:0;top:0;bottom:0;width:9px;
+    border-radius:18px 0 0 18px;background:linear-gradient(180deg,#4A9DFC,#7C6BF5);}
+  .toast svg{width:28px;height:28px;color:#4A9DFC;stroke-width:2.2;margin-right:10px;flex:none;}
+
+  /* 8 图例 */
+  .lgd{display:flex;flex-direction:column;gap:14px;}
+  .lgd div{display:flex;align-items:center;font-size:21px;color:#4A5A6E;letter-spacing:.5px;}
+  .lgd i{width:20px;height:20px;border-radius:7px;background:#4A9DFC;display:block;margin-right:11px;}
+  .lgd div:nth-child(2) i{background:#7C6BF5;}
+  .lgd div:nth-child(3) i{background:#B7D5F4;}
+
+  /* 9 枢纽点 / 10 双箭头 / 11 弧线：连接件的三种形态，直接内联 svg */
+  .hub{width:170px;height:82px;}
+  .arr2{width:150px;height:44px;}
+  .arc{width:160px;height:82px;}
+  .stroke-line{stroke:#A9C7EC;stroke-width:5;fill:none;stroke-linecap:round;}
+  .stroke-head{stroke:#7FB6F3;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .stroke-dot{fill:#fff;stroke:#4A9DFC;stroke-width:4;}
+
+  /* 12 网格底纹 */
+  .gridbg{width:150px;height:110px;border-radius:16px;border:1px solid #E4F0FD;
+    background-image:
+      linear-gradient(90deg,rgba(169,199,236,.60) 1px,transparent 1px),
+      linear-gradient(0deg,rgba(169,199,236,.60) 1px,transparent 1px);
+    background-size:25px 25px;}
+
+  /* 13 柔光：铺在渐变瓦片或核心圆后面，制造"这是重点"的空气感 */
+  .glow{width:154px;height:112px;border-radius:18px;
+    background:radial-gradient(circle at 50% 52%,rgba(74,157,252,.50),rgba(124,107,245,.16) 46%,rgba(255,255,255,0) 74%);}
+
+  /* 14 同心波纹 */
+  .ripple{width:140px;height:140px;}
+
+  /* 15 玻璃卡：底块要比卡片大一圈才透得出来，否则渐变被整块盖掉 */
+  .glasswrap{position:relative;width:200px;height:126px;}
+  .glasswrap .bg{position:absolute;left:15px;top:4px;width:170px;height:116px;border-radius:28px;
+    background:linear-gradient(135deg,#4A9DFC,#7C6BF5);}
+  .glass{position:absolute;left:24px;top:16px;width:150px;height:94px;border-radius:22px;
+    background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,255,255,.55));
+    border:1px solid rgba(255,255,255,.95);
+    box-shadow:0 16px 34px rgba(31,71,141,.18),inset 0 1px 0 rgba(255,255,255,.95);
+    display:flex;align-items:center;justify-content:center;}
+  .glass svg{width:50px;height:50px;color:#2E6FCB;stroke-width:1.8;}
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="shell"></div>
+  <div class="panel"><div class="dots"></div></div>
+
+  <div class="head">元素零件库 · 扩展</div>
+  <div class="sub">15 件 / 数据 · 状态 · 界面 · 装饰 / 与基础零件同一套 token</div>
+
+  <div class="grid">
+    <div class="cell"><div class="stage"><div class="prog"><i></i></div></div>
+      <div class="nm">进度条</div><div class="sz">.prog 170×14 / r7</div></div>
+
+    <div class="cell"><div class="stage"><div class="st"><i></i><i></i><i></i></div></div>
+      <div class="nm">状态点</div><div class="sz">.st 22 + 7px 光晕</div></div>
+
+    <div class="cell"><div class="stage" style="gap:16px;"><div class="num">01</div><div class="num on">02</div></div>
+      <div class="nm">编号圆</div><div class="sz">.num 66 / r50%</div></div>
+
+    <div class="cell"><div class="stage"><div class="tc"><svg><use href="#i-file"/></svg><b>草稿</b></div></div>
+      <div class="nm">角标卡</div><div class="sz">.tc b 骑左上角</div></div>
+
+    <div class="cell"><div class="stage"><div class="avs"><i>陈</i><i>李</i><u>+3</u></div></div>
+      <div class="nm">头像组</div><div class="sz">.avs 58 / 叠 -16</div></div>
+
+    <div class="cell"><div class="stage"><div class="lrow"><svg><use href="#i-doc"/></svg>
+      <div class="t">会议纪要<em>12 条待确认</em></div><span class="cx">›</span></div></div>
+      <div class="nm">列表行</div><div class="sz">.lrow 216×66</div></div>
+
+    <div class="cell"><div class="stage"><div class="toast"><svg><use href="#i-check-circle"/></svg>已保存</div></div>
+      <div class="nm">提示条</div><div class="sz">.toast 248×64 左色条 9</div></div>
+
+    <div class="cell"><div class="stage"><div class="lgd">
+      <div><i></i>已完成</div><div><i></i>进行中</div><div><i></i>未开始</div></div></div>
+      <div class="nm">图例</div><div class="sz">.lgd 色块 20 / r7</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="hub" viewBox="0 0 170 82">
+        <path class="stroke-line" d="M28 74V52H142V74"/>
+        <path class="stroke-line" d="M85 52V8"/>
+        <circle class="stroke-dot" cx="85" cy="52" r="10"/>
+      </svg></div>
+      <div class="nm">枢纽点</div><div class="sz">.hub 分叉必留点</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="arr2" viewBox="0 0 150 44">
+        <path class="stroke-line" d="M14 22h122"/>
+        <path class="stroke-head" d="M26 9L13 22l13 13M124 9l13 13-13 13"/>
+      </svg></div>
+      <div class="nm">双向箭头</div><div class="sz">.arr2 双向同步</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="arc" viewBox="0 0 160 82">
+        <path class="stroke-line" stroke-dasharray="12 10" d="M10 70C34 70 34 18 62 18h46"/>
+        <path class="stroke-head" d="M96 6l12 12-12 12"/>
+      </svg></div>
+      <div class="nm">弧线连接</div><div class="sz">.arc 绕开遮挡</div></div>
+
+    <div class="cell"><div class="stage"><div class="gridbg"></div></div>
+      <div class="nm">网格底纹</div><div class="sz">.gridbg 间距 25</div></div>
+
+    <div class="cell"><div class="stage"><div class="glow"></div></div>
+      <div class="nm">柔光</div><div class="sz">.glow 垫在重点后</div></div>
+
+    <div class="cell"><div class="stage">
+      <svg class="ripple" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="20" fill="#4A9DFC"/>
+        <circle cx="70" cy="70" r="36" fill="none" stroke="#8FBDF0" stroke-width="4" opacity=".55"/>
+        <circle cx="70" cy="70" r="54" fill="none" stroke="#A9C7EC" stroke-width="4" opacity=".28"/>
+      </svg></div>
+      <div class="nm">同心波纹</div><div class="sz">.ripple 20 / 36 / 54</div></div>
+
+    <div class="cell"><div class="stage"><div class="glasswrap"><div class="bg"></div>
+      <div class="glass"><svg><use href="#i-sparkles"/></svg></div></div></div>
+      <div class="nm">玻璃卡</div><div class="sz">.glass 150×94 / r22</div></div>
+  </div>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!-- 本文件只用 4 枚图标；由 scripts/iconlib.py --pack 生成，改图标请重跑 --pack -->
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 4.2a2 2 0 012-2h7l5.2 5.2v12.6a2 2 0 01-2 2H7a2 2 0 01-2-2z"/>
+  <path d="M13.8 2.2v5.4h5.4"/>
+  <path d="M8.4 12.6h7.2M8.4 16.2h4.8"/>
+</symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 2.5H7A2.5 2.5 0 004.5 5v14A2.5 2.5 0 007 21.5h10a2.5 2.5 0 002.5-2.5V8l-5.5-5.5z"/>
+  <path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>
+</symbol>
+<symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9.2"/>
+  <path d="M8 12.2l2.9 2.9L16.4 9.6"/>
+</symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 2.5c.6 4.6 4.1 8.1 8.7 8.7-4.6.6-8.1 4.1-8.7 8.7-.6-4.6-4.1-8.1-8.7-8.7 4.6-.6 8.1-4.1 8.7-8.7z"/>
+  <path d="M18.5 15.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3z"/>
+</symbol>
+</svg>
+</body>
+</html>

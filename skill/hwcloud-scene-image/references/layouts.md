@@ -191,4 +191,4 @@ v3 不铺 content 白卡，图形直接浮在淡蓝面板上。版式少而稳�
 3. 既有多类产出又强调"可以改" → 用 **D**，浮标写「局部可改」，把四个徽章中的一个换成 `tile-sel` 选中态
 4. 要"分层架构"（接入 / 服务 / 数据）→ v3 暂无专用版式，用 `parts.html` 的 `.stackk` 层堆叠自行搭，或退回 v2 的 **C-2**
 
-v3 的元素不够用时，先翻 `assets/parts.html`（15 件）和 `assets/icons.svg`（50 枚），不要临时造新形状。
+v3 的元素不够用时，先翻 `assets/parts.html` + `assets/parts-ext.html`（共 30 件）和 `assets/icons.svg`（100 枚），不要临时造新形状。

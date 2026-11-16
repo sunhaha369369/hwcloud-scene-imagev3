@@ -27,7 +27,7 @@
 | 技术栈 | HTML + CSS + 内联 SVG |
 | 渲染器 | Edge / Chrome / Chromium headless |
 | 依赖 | **无**（`render.py` 只用 Python 标准库） |
-| 图形资产 | **50 枚线性图标** + **15 件图形零件** |
+| 图形资产 | **100 枚线性图标** + **30 件图形零件** |
 | 单张耗时 | 约 2 秒 |
 
 ## 三条设计原则
@@ -58,17 +58,21 @@
 
 ### 图标库 · `assets/icons.svg`
 
-50 枚线性图标，24×24 网格，统一 1.6 视觉基调、圆头圆角、吃 `currentColor`：
+100 枚线性图标，24×24 网格，统一视觉基调、圆头圆角、吃 `currentColor`，按用途分 5 组：
 
 | 分组 | 数量 | 内容 |
 |---|---|---|
-| 图表 / 图示 | 12 | 时序图 `i-sequence`、ER 图 `i-er`、状态机 `i-state`、拓扑 `i-topology`、流程 `i-flow`、树 `i-tree`、看板 `i-kanban`、时间轴 `i-timeline`、柱 / 线 / 饼 `i-chart-*`、九宫格 `i-grid` |
-| 技术元素 | 15 | 终端 `i-terminal`、代码 `i-code`、数据库 `i-database`、云 `i-cloud`、服务 `i-server`、CPU `i-cpu`、分支 `i-branch`、合并 `i-merge`、盾 `i-shield`、锁 `i-lock`、闪电 `i-zap`、时钟 `i-clock`、图层 `i-layers`、立方 `i-box`、窗口 `i-window` |
-| AI / 内容 | 23 | 星芒 `i-sparkles`、魔棒 `i-wand`、机器人 `i-bot`、灯泡 `i-bulb`、文档 `i-doc`、书 `i-book`、图片 `i-image`、链接 `i-link`、火箭 `i-rocket`、刷新 `i-refresh`、勾 `i-check`… |
+| 图表 / 图示 | 25 | 时序图 `i-sequence`、ER 图 `i-er`、状态机 `i-state`、拓扑 `i-topology`、流程 `i-flow`、树 `i-tree`、看板 `i-kanban`、时间轴 `i-timeline`、节点图 `i-node-graph`、柱 / 线 / 饼 / 散点 / 仪表 / 雷达 `i-chart-*` `i-scatter` `i-gauge` `i-radar`、九宫格 `i-grid`、表格 `i-table`、思维导图 `i-mindmap`、金字塔 `i-pyramid`、漏斗 `i-funnel`、泳道 `i-swimlane`、甘特 `i-gantt`、仪表盘 `i-dashboard`、报告 `i-report`、日历 `i-calendar` |
+| 技术 / 基础设施 | 31 | 终端 `i-terminal`、代码 `i-code`、提交 `i-commit`、分支 `i-branch`、合并 `i-merge`、缺陷 `i-bug`、服务 `i-server`、云 `i-cloud`、CPU `i-cpu`、数据库 `i-database`、存储 `i-storage`、数据集 `i-dataset`、队列 `i-queue`、接口 `i-plug`、发布 `i-deploy`、伸缩 `i-scale`、监控 `i-monitor`、全球 `i-globe`、图层 `i-layers`、立方 `i-box`、窗口 `i-window`、笔电 `i-laptop`、手机 `i-mobile`、文件夹 `i-folder`、文件 `i-file`、盾 `i-shield`、锁 `i-lock`、密钥 `i-key`、实验 `i-beaker`、闪电 `i-zap`、时钟 `i-clock` |
+| AI / 智能 | 15 | 星芒 `i-sparkles`、魔棒 `i-wand`、机器人 `i-bot`、神经网络 `i-neural`、提示词 `i-prompt`、分词 `i-token`、向量 `i-vector`、灯泡 `i-bulb`、靶心 `i-target`、火箭 `i-rocket`、麦克风 `i-mic`、声波 `i-wave`、视频 `i-video`、扫描 `i-scan`、翻译 `i-translate` |
+| 内容 / 协作 | 14 | 文档 `i-doc`、书 `i-book`、图片 `i-image`、画框 `i-frame`、链接 `i-link`、消息 `i-message`、上传 `i-upload`、刷新 `i-refresh`、分享 `i-share`、用户 `i-user`、团队 `i-users`、通知 `i-bell`、收藏 `i-star`、标签 `i-tag` |
+| 交互 / 状态 | 15 | 光标 `i-cursor`、画笔 `i-pen`、滑杆 `i-sliders`、开关 `i-toggle`、加号 `i-plus`、右箭头 `i-arrow-right`、搜索 `i-search`、勾 `i-check`、完成 `i-check-circle`、关闭 `i-close`、更多 `i-more`、播放 `i-play`、预览 `i-eye`、警告 `i-warn`、提示 `i-info` |
 
 ```bash
-python skill/hwcloud-scene-image/scripts/iconlib.py --list          # 按分组列出全部 id
-python skill/hwcloud-scene-image/scripts/iconlib.py --preview w.png # 生成图标墙，挑图用
+python skill/hwcloud-scene-image/scripts/iconlib.py --list           # 全部，按组分
+python skill/hwcloud-scene-image/scripts/iconlib.py --list 图表       # 只看某组
+python skill/hwcloud-scene-image/scripts/iconlib.py --preview w.png  # 图标墙，核对形状
+python skill/hwcloud-scene-image/scripts/iconlib.py --pack a.html    # 把用到的图标内联进去
 ```
 
 **线宽必须按显示尺寸配。** symbol 里刻意不写 `stroke-width`——24 网格放大到 176px 时，写死的 1.6 会变成 12px 的粗描边。视宽公式：
@@ -86,11 +90,14 @@ python skill/hwcloud-scene-image/scripts/iconlib.py --preview w.png # 生成图�
 
 目标区间 **7–9px**，缩到 240px 时约 1px，细而不虚。
 
-> ⚠️ **sprite 必须整段内联**。`<use href="icons.svg#i-database">` 这种外部引用在 `file://` 下会被浏览器按跨域拦掉，结果是图标整片消失且**不报错**。模板里已经把 50 枚 symbol 内联在页面底部，直接复用。
+> ⚠️ **sprite 必须内联**。`<use href="icons.svg#i-database">` 这种外部引用在 `file://` 下会被浏览器按跨域拦掉，结果是图标整片消失且**不报错**。
+> 但也不用整段粘 100 枚——页面里写一行 `<!--SPRITE-->` 占位，然后跑 `iconlib.py --pack 页面.html`，它只把**这一页实际引用到的** symbol 塞进去。换过图标再跑一次即可。
 
-### 零件墙 · `assets/parts.html`
+### 零件墙 · `assets/parts.html` + `assets/parts-ext.html`
 
-15 件图形零件，每件都标了 class 名和尺寸，浏览器打开即可见，直接抄 HTML + CSS：
+30 件图形零件分两页，每件都标了 class 名和尺寸，浏览器打开即可见，直接抄 HTML + CSS。一页只能放 15 格（5 列 × 3 行），所以拆成"基础 / 扩展"——缩小格子会看不清，宁加分页。
+
+**基础页** `parts.html`（形状 / 容器 / 连接）：
 
 | 零件 | class | 关键参数 |
 |---|---|---|
@@ -109,6 +116,27 @@ python skill/hwcloud-scene-image/scripts/iconlib.py --preview w.png # 生成图�
 | 点阵底纹 | `.dotgrid` | 间距 22px |
 | 星芒 | `.spark` | 金色点题，1–2 处 |
 | 选中瓦片 | `.tile-sel` | 5px 描边 + 12px 光晕 |
+
+**扩展页** `parts-ext.html`（数据 / 状态 / 界面 / 装饰）：
+
+| 零件 | class | 关键参数 |
+|---|---|---|
+| 进度条 | `.prog` | 170×14 / r7 / 渐变填充 62% |
+| 状态点 | `.st` | 22px 圆 + 7px 光晕，三档明度 |
+| 编号圆 | `.num` | 66px / r50%，`.on` 为渐变实心 |
+| 角标卡 | `.tc` | 160×118，`b` 胶囊骑在左上角 |
+| 头像组 | `.avs` | 58px / 叠 -16 / 末位虚线圈 |
+| 列表行 | `.lrow` | 216×66，图标 + 两级文字 + 箭头 |
+| 提示条 | `.toast` | 248×64，左侧 9px 渐变色条 |
+| 图例 | `.lgd` | 色块 20 / r7，2–3 行 |
+| 枢纽点 | `.hub` | 分叉处白心蓝环圆点 r10 |
+| 双向箭头 | `.arr2` | 两端箭头，表双向同步 |
+| 弧线连接 | `.arc` | 虚线弧绕开遮挡，末端右箭头 |
+| 网格底纹 | `.gridbg` | 25px 细线网格 |
+| 柔光 | `.glow` | 径向渐变，垫在重点后面 |
+| 同心波纹 | `.ripple` | 20 / 36 / 54 三环递减 |
+| 玻璃卡 | `.glass` | 150×94 半透明白，背后垫大一圈的渐变块 |
+
 
 ## 为什么用 HTML 渲染，而不是 AI 生图
 
@@ -143,8 +171,9 @@ HTML 渲染把这三件事都变成确定性的：文字是真文字、圆是真
 │       │   ├── layouts.md       # 五种版式骨架 + 元素配方
 │       │   └── checklist.md     # 交付前自检（含图形化专用项）
 │       ├── assets/
-│       │   ├── icons.svg               # 50 枚线性图标 sprite
-│       │   ├── parts.html              # 15 件图形零件墙
+│       │   ├── icons.svg               # 100 枚线性图标 sprite（5 组）
+│       │   ├── parts.html              # 基础零件墙 15 件
+│       │   ├── parts-ext.html          # 扩展零件墙 15 件
 │       │   ├── template-d-orbit.html   # D 核心分支
 │       │   ├── template-e-pipeline.html# E 圆形流水线
 │       │   ├── _blank-shell.html       # 只有壳层，从零搭版式用
@@ -185,7 +214,7 @@ D 版式的全部可变量只有这些：
                       <!-- ↑ 4–6 个汉字，别照搬长标题 -->
 
 <div class="sat" style="left:382px;top:322px;"><svg><use href="#i-sequence"/></svg></div>
-                                                 <!-- ↑ 换 id 就换图，50 枚可选 -->
+                                                 <!-- ↑ 换 id 就换图，100 枚可选（iconlib.py --list） -->
 
 <div class="tag" style="left:375px;top:522px;">时序图</div>
                                                  <!-- ↑ 2–3 字，最多 4 处 -->
@@ -290,7 +319,7 @@ cp -r skill/hwcloud-scene-image ~/.workbuddy/skills/
 | 一个核心能力辐射多类产出 / 四种形态 | **D 核心分支** | `template-d-orbit.html` |
 | 2–4 步串联、上传→解析→入库这类流程 | **E 圆形流水线** | `template-e-pipeline.html` |
 
-两套版式对应两种最常见的结构：**一对多**和**多步串联**。遇到都不合适的标题，用 `_blank-shell.html` 起手，从 `parts.html` 挑零件自己摆——图形化版式本来就是拼出来的。
+两套版式对应两种最常见的结构：**一对多**和**多步串联**。遇到都不合适的标题，用 `_blank-shell.html` 起手，从 `parts.html` / `parts-ext.html` 挑零件自己摆——图形化版式本来就是拼出来的。
 
 ## 几何速查
 
@@ -353,7 +382,7 @@ cp -r skill/hwcloud-scene-image ~/.workbuddy/skills/
 
 | 现象 | 原因 | 修法 |
 |---|---|---|
-| 图标整片消失，控制台无报错 | 外部引用 `icons.svg#id`，`file://` 下被跨域拦掉 | sprite 整段内联进页面 |
+| 图标整片消失，控制台无报错 | 外部引用 `icons.svg#id`，`file://` 下被跨域拦掉 | `iconlib.py --pack 页面.html` 内联 |
 | 图标显得笨重、笔画糊成一块 | 24 网格的 `stroke-width` 没随尺寸换算 | 按 `视宽 = stroke × 尺寸 / 24` 配，目标 7–9px |
 | 画面空旷、图形像贴纸 | 装置占画布不到 40% | 核心图形撑到画布 50–55% |
 | 缩略后糊成一片灰 | 元素太小、太多 | 内容元素 ≤4 个；标签 48px 起；图形 84px 起 |
@@ -379,9 +408,9 @@ git add -f samples/
 
 ## 二次开发
 
-- **加图标**：在 `assets/icons.svg` 里按 24×24 网格写 `<symbol id="i-xxx">`，**不要写 `stroke-width`**，然后跑 `iconlib.py --preview` 检查形状。
+- **加图标**：在 `assets/icons.svg` 里按 24×24 网格写 `<symbol id="i-xxx">`，**不要写 `stroke-width`**，然后跑 `iconlib.py --preview --group <组名>` 检查形状；最后对模板跑一次 `--pack`。
 - **换配色**：只改三个值——主蓝 `#4A9DFC`、中段 `#5E92F9`、紫端 `#7C6BF5`。保持 135° 渐变方向和"深蓝投影"两条不变，家族感就不会丢。
-- **加版式**：用 `_blank-shell.html` 起手，壳层不动，在面板上按绝对坐标摆零件。图形化版式从 `parts.html` 里挑 3–5 件组合。
+- **加版式**：用 `_blank-shell.html` 起手，壳层不动，在面板上按绝对坐标摆零件。图形化版式从两个零件墙里挑 3–5 件组合。
 - **批量出图**：遍历标题列表 → 替换模板文本 → 调 `render.py`。模板是纯文本，字符串替换或 Jinja2 都行。
 - **改尺寸**：不建议。11:7 + 1760×1120 是这套图的比例基因，所有坐标都按它算好了。
 
@@ -392,7 +421,7 @@ git add -f samples/
 - [x] 连线端点几何校验，渲染后自动拦截
 - [x] Agent Skill 封装
 - [x] 按 240px 观看尺寸重新标定（字号 ×2、元素数 ÷3）
-- [x] **图形化取向**：50 枚图标库 + 15 件零件墙 + D/E 两套版式
+- [x] **图形化取向**：100 枚图标库 + 30 件零件墙 + D/E 两套版式
 - [ ] 更多图形化版式（分层架构、对比矩阵）
 - [ ] 一键批量：`titles.txt` → 一批 PNG
 - [ ] SVG 输出（当前只有 PNG，矢量版可无损缩放）
@@ -415,7 +444,7 @@ An **icon-driven** flat-vector product illustration system rendered with plain H
 
 The point is the information carrier: instead of a row of rounded cards each carrying a label, meaning is carried by **large icons and graphic devices**. A 360px orb with three offset pages, four white circular badges, a pair of gradient arrows — the shape says it, and the label only names it.
 
-- **Assets**: 50 line icons (`assets/icons.svg`, 24×24 grid, `stroke-width` deliberately omitted so it scales) and 15 graphic parts (`assets/parts.html`).
+- **Assets**: 100 line icons (`assets/icons.svg`, 24×24 grid, `stroke-width` deliberately omitted so it scales) and 30 graphic parts (`assets/parts.html` + `assets/parts-ext.html`).
 - **Rules**: no white content card — shapes sit directly on the tinted panel; icons 84–190px; 3–4 labels of 2–3 characters each; borders come from shadow, not strokes.
 - **Layouts**: D core-branch (one capability, four outputs), E circular pipeline (2–4 steps).
 - **Stack**: HTML + CSS + inline SVG, rendered by headless Edge/Chrome. `render.py` uses only the Python standard library.

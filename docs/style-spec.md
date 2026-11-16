@@ -100,20 +100,27 @@
 
 ---
 
-## 6. 图标系统（50 枚）
+## 6. 图标系统（100 枚 / 5 组）
 
 24×24 网格，圆头圆角，吃 `currentColor`。**symbol 内不写 `stroke-width`**，线宽由使用处的显示尺寸决定。
 
-| 分组 | 数量 | 代表 id |
+| 分组 | 数量 | 内容 |
 |---|---|---|
-| 图表 / 图示 | 12 | `i-sequence` `i-er` `i-state` `i-topology` `i-flow` `i-tree` `i-kanban` `i-timeline` `i-chart-bar` `i-chart-line` `i-chart-pie` `i-grid` |
-| 技术元素 | 15 | `i-terminal` `i-code` `i-database` `i-cloud` `i-server` `i-cpu` `i-branch` `i-merge` `i-shield` `i-lock` `i-zap` `i-clock` `i-layers` `i-box` `i-window` |
-| AI / 内容 | 23 | `i-sparkles` `i-wand` `i-bot` `i-bulb` `i-doc` `i-book` `i-image` `i-link` `i-rocket` `i-refresh` `i-check` `i-search` `i-target` `i-cursor` `i-pen` `i-frame` `i-message` `i-toggle` `i-upload` `i-arrow-right` `i-sliders` `i-plus` `i-node-graph` |
+| 图表 / 图示 | 25 | 时序 `i-sequence` 实体关系 `i-er` 状态机 `i-state` 拓扑 `i-topology` 流程 `i-flow` 树 `i-tree` 看板 `i-kanban` 时间轴 `i-timeline` 节点图 `i-node-graph` 柱线饼散点 `i-chart-*` `i-scatter` 仪表 `i-gauge` 雷达 `i-radar` 九宫格 `i-grid` 表格 `i-table` 思维导图 `i-mindmap` 金字塔 `i-pyramid` 漏斗 `i-funnel` 泳道 `i-swimlane` 甘特 `i-gantt` 仪表盘 `i-dashboard` 报告 `i-report` 日历 `i-calendar` |
+| 技术 / 基础设施 | 31 | 终端 `i-terminal` 代码 `i-code` 提交 `i-commit` 分支 `i-branch` 合并 `i-merge` 缺陷 `i-bug` 服务 `i-server` 云 `i-cloud` CPU `i-cpu` 数据库 `i-database` 存储 `i-storage` 数据集 `i-dataset` 队列 `i-queue` 接口 `i-plug` 发布 `i-deploy` 伸缩 `i-scale` 监控 `i-monitor` 全球 `i-globe` 图层 `i-layers` 立方 `i-box` 窗口 `i-window` 笔电 `i-laptop` 手机 `i-mobile` 文件夹 `i-folder` 文件 `i-file` 盾 `i-shield` 锁 `i-lock` 密钥 `i-key` 实验 `i-beaker` 闪电 `i-zap` 时钟 `i-clock` |
+| AI / 智能 | 15 | 星芒 `i-sparkles` 魔棒 `i-wand` 机器人 `i-bot` 神经网络 `i-neural` 提示词 `i-prompt` 分词 `i-token` 向量 `i-vector` 灯泡 `i-bulb` 靶心 `i-target` 火箭 `i-rocket` 麦克风 `i-mic` 声波 `i-wave` 视频 `i-video` 扫描 `i-scan` 翻译 `i-translate` |
+| 内容 / 协作 | 14 | 文档 `i-doc` 书 `i-book` 图片 `i-image` 画框 `i-frame` 链接 `i-link` 消息 `i-message` 上传 `i-upload` 刷新 `i-refresh` 分享 `i-share` 用户 `i-user` 团队 `i-users` 通知 `i-bell` 收藏 `i-star` 标签 `i-tag` |
+| 交互 / 状态 | 15 | 光标 `i-cursor` 画笔 `i-pen` 滑杆 `i-sliders` 开关 `i-toggle` 加号 `i-plus` 右箭头 `i-arrow-right` 搜索 `i-search` 勾 `i-check` 完成 `i-check-circle` 关闭 `i-close` 更多 `i-more` 播放 `i-play` 预览 `i-eye` 警告 `i-warn` 提示 `i-info` |
 
 ```bash
-python skill/hwcloud-scene-image/scripts/iconlib.py --list
-python skill/hwcloud-scene-image/scripts/iconlib.py --preview wall.png
+python skill/hwcloud-scene-image/scripts/iconlib.py --list             # 全部 100 枚
+python skill/hwcloud-scene-image/scripts/iconlib.py --list 技术          # 只看一组
+python skill/hwcloud-scene-image/scripts/iconlib.py --preview wall.png  # 整墙
+python skill/hwcloud-scene-image/scripts/iconlib.py --pack page.html    # 内联本页用到的
 ```
+
+新增图标前先想清楚：这一枚是否真的会被反复用到。只为一处语义造图标，宁可用别的方式表达。
+新图标必须先在 `--preview` 里看清形状再用——24 网格上手画很容易画出畸形。
 
 ### 线宽换算
 
@@ -130,13 +137,14 @@ python skill/hwcloud-scene-image/scripts/iconlib.py --preview wall.png
 
 目标区间 **7–9px**，缩到 240px 时约 1px，细而不虚。写死 1.6 的图标放到 176px 会变成 11.7px，整片糊成色块。
 
-> ⚠️ **sprite 必须整段内联**。`<use href="icons.svg#i-db">` 在 `file://` 下会被跨域拦截，图标消失且不报错。
+> ⚠️ **sprite 必须内联**。`<use href="icons.svg#i-db">` 在 `file://` 下会被跨域拦截，图标消失且不报错。
+> 页面写 `<!--SPRITE-->` 占位，跑 `iconlib.py --pack 页面.html` 只内联本页引用到的 symbol——不要整段粘 100 枚。
 
 ---
 
-## 7. 图形零件（15 件）
+## 7. 图形零件（30 件 / 两页）
 
-完整实现见 `skill/hwcloud-scene-image/assets/parts.html`，浏览器打开即可见、可直接抄。
+完整实现见 `assets/parts.html`（基础 15 件：形状 / 容器 / 连接）与 `assets/parts-ext.html`（扩展 15 件：数据 / 状态 / 界面 / 装饰），浏览器打开即可见、可直接抄。单页最多 15 格（5 列 × 3 行），再多就分页，不要缩小格子。
 
 | 零件 | class | 关键参数 |
 |---|---|---|
@@ -155,6 +163,21 @@ python skill/hwcloud-scene-image/scripts/iconlib.py --preview wall.png
 | 点阵底纹 | `.dotgrid` | 间距 22 |
 | 星芒 | `.spark` | 点题，1–2 处 |
 | 选中瓦片 | `.tile-sel` | 5px + 12px 光晕 |
+| 进度条 | `.prog` | 170×14 / r7 / 渐变填充 |
+| 状态点 | `.st` | 22px + 7px 光晕，三档明度 |
+| 编号圆 | `.num` | 66px / r50%，`.on` 渐变实心 |
+| 角标卡 | `.tc` | 160×118，胶囊骑左上角 |
+| 头像组 | `.avs` | 58px / 叠 -16 |
+| 列表行 | `.lrow` | 216×66，两级文字 |
+| 提示条 | `.toast` | 248×64，左色条 9 |
+| 图例 | `.lgd` | 色块 20 / r7 |
+| 枢纽点 | `.hub` | 分叉处白心蓝环 r10 |
+| 双向箭头 | `.arr2` | 双向同步 |
+| 弧线连接 | `.arc` | 虚线弧绕开遮挡 |
+| 网格底纹 | `.gridbg` | 25px 细线网格 |
+| 柔光 | `.glow` | 径向渐变，垫在重点后 |
+| 同心波纹 | `.ripple` | 20 / 36 / 54 三环 |
+| 玻璃卡 | `.glass` | 150×94，背后垫大一圈渐变块 |
 
 ---
 

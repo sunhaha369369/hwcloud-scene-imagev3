@@ -166,8 +166,8 @@
     <div class="meta">
       <div>画布比例<b>11 : 7</b></div>
       <div>色相范围<b>200°–250°</b></div>
-      <div>图标<b>50 枚</b></div>
-      <div>图形零件<b>15 件</b></div>
+      <div>图标<b>100 枚</b></div>
+      <div>图形零件<b>30 件</b></div>
     </div>
   </div>
 
@@ -318,7 +318,7 @@
 
   <!-- 06 -->
   <section>
-    <div class="sec-head"><span class="num">06</span><h2>图标系统：50 枚，线宽随尺寸走</h2></div>
+    <div class="sec-head"><span class="num">06</span><h2>图标系统：100 枚 / 5 组，线宽随尺寸走</h2></div>
     <p class="lead">图标是图形化的主力。全部 24×24 网格、圆头圆角、吃 <code>currentColor</code>，<strong>symbol 里不写 <code>stroke-width</code></strong>——线宽由使用处的显示尺寸决定。</p>
     <div class="card">
       <div class="scale-row">
@@ -338,27 +338,23 @@
       <div class="note" style="margin-top:24px">换算公式：<strong>视觉线宽 = stroke-width × 显示尺寸 / 24</strong>。目标区间 7–9px，缩到 240px 时约 1px，细而不虚。写死 1.6 的图标放到 176px 会变成 11.7px 的粗描边，整片糊成色块。</div>
     </div>
 
-    <div class="grid3" style="margin-top:20px">
-      <div class="card">
-        <h4 style="font-size:13.5px;font-weight:600">图表 / 图示 · 12</h4>
-        <p style="font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.9">时序图 · ER 图 · 状态机 · 拓扑 · 流程 · 树 · 看板 · 时间轴 · 柱 · 线 · 饼 · 九宫格</p>
-      </div>
-      <div class="card">
-        <h4 style="font-size:13.5px;font-weight:600">技术元素 · 15</h4>
-        <p style="font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.9">终端 · 代码 · 数据库 · 云 · 服务 · CPU · 分支 · 合并 · 盾 · 锁 · 闪电 · 时钟 · 图层 · 立方 · 窗口</p>
-      </div>
-      <div class="card">
-        <h4 style="font-size:13.5px;font-weight:600">AI / 内容 · 23</h4>
-        <p style="font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.9">星芒 · 魔棒 · 机器人 · 灯泡 · 文档 · 书 · 图片 · 链接 · 火箭 · 刷新 · 勾 · 搜索 · 靶心 · 光标 · 笔 · 画框 · 消息 · 开关 · 上传 · 箭头 · 滑杆 · 加号 · 节点图</p>
-      </div>
+    <div class="card" style="margin-top:20px">
+      <table>
+        <tr><th style="width:150px">分组</th><th style="width:70px">数量</th><th>内容</th></tr>
+        <tr><td><b>图表 / 图示</b></td><td>25</td><td>时序图 · ER 图 · 状态机 · 拓扑 · 流程 · 树 · 看板 · 时间轴 · 节点图 · 柱线饼散点 · 仪表 · 雷达 · 九宫格 · 表格 · 思维导图 · 金字塔 · 漏斗 · 泳道 · 甘特 · 仪表盘 · 报告 · 日历</td></tr>
+        <tr><td><b>技术 / 基础设施</b></td><td>31</td><td>终端 · 代码 · 提交 · 分支 · 合并 · 缺陷 · 服务 · 云 · CPU · 数据库 · 存储 · 数据集 · 队列 · 接口 · 发布 · 伸缩 · 监控 · 全球 · 图层 · 立方 · 窗口 · 笔电 · 手机 · 文件夹 · 文件 · 盾 · 锁 · 密钥 · 实验 · 闪电 · 时钟</td></tr>
+        <tr><td><b>AI / 智能</b></td><td>15</td><td>星芒 · 魔棒 · 机器人 · 神经网络 · 提示词 · 分词 · 向量 · 灯泡 · 靶心 · 火箭 · 麦克风 · 声波 · 视频 · 扫描 · 翻译</td></tr>
+        <tr><td><b>内容 / 协作</b></td><td>14</td><td>文档 · 书 · 图片 · 画框 · 链接 · 消息 · 上传 · 刷新 · 分享 · 用户 · 团队 · 通知 · 收藏 · 标签</td></tr>
+        <tr><td><b>交互 / 状态</b></td><td>15</td><td>光标 · 画笔 · 滑杆 · 开关 · 加号 · 右箭头 · 搜索 · 勾 · 完成 · 关闭 · 更多 · 播放 · 预览 · 警告 · 提示</td></tr>
+      </table>
     </div>
-    <div class="note warn"><strong>最容易踩的坑：</strong>图标 sprite 必须<strong>整段内联</strong>到页面里。写 <code>&lt;use href="icons.svg#i-database"&gt;</code> 这种外部引用，在 <code>file://</code> 下会被浏览器按跨域拦掉——图标整片消失，而且<strong>不报错</strong>。</div>
+    <div class="note warn"><strong>最容易踩的坑：</strong>图标 sprite 必须<strong>内联</strong>到页面里。写 <code>&lt;use href="icons.svg#i-database"&gt;</code> 这种外部引用，在 <code>file://</code> 下会被浏览器按跨域拦掉——图标整片消失，而且<strong>不报错</strong>。<br>但也别整段粘 100 枚：页面写一行 <code>&lt;!--SPRITE--&gt;</code> 占位，跑 <code>iconlib.py --pack 页面.html</code>，只把这一页真正引用到的 symbol 塞进去。</div>
   </section>
 
   <!-- 07 -->
   <section>
-    <div class="sec-head"><span class="num">07</span><h2>图形零件 · 15 件</h2></div>
-    <p class="lead">版式是拼出来的。以下零件都带 class 名和尺寸，完整实现在 <code>skill/hwcloud-scene-image/assets/parts.html</code>，浏览器打开即可见、可直接抄。</p>
+    <div class="sec-head"><span class="num">07</span><h2>图形零件 · 30 件 / 两页</h2></div>
+    <p class="lead">版式是拼出来的。以下零件都带 class 名和尺寸，完整实现在 <code>assets/parts.html</code>（基础 15 件）与 <code>assets/parts-ext.html</code>（扩展 15 件），浏览器打开即可见、可直接抄。一页最多 15 格，再多就分页——缩小格子会看不清。</p>
     <div class="grid4">
       <div class="el"><div class="stage"><div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11l-1 8.5 9-12h-6.5z"/></svg></div></div><h4>渐变瓦片</h4><p>.tile-grad<br>170–200 / r44</p></div>
       <div class="el"><div class="stage"><div class="badge-c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4v5"/></svg></div></div><h4>白圆徽章</h4><p>.sat / .badge-c<br>152–176</p></div>
@@ -369,7 +365,16 @@
       <div class="el"><div class="stage" style="gap:6px"><span style="width:9px;height:26px;background:#CFE0F4;border-radius:3px;display:block"></span><span style="width:9px;height:42px;background:#8FBDF0;border-radius:3px;display:block"></span><span style="width:9px;height:60px;background:#4A9DFC;border-radius:3px;display:block"></span><span style="width:9px;height:34px;background:#8FBDF0;border-radius:3px;display:block"></span></div><h4>微柱图</h4><p>.bars<br>150×126</p></div>
       <div class="el"><div class="stage"><div style="width:88px;height:66px;border-radius:10px;background-image:radial-gradient(circle at 1px 1px,#9CC6F2 2px,transparent 2.4px);background-size:16px 16px"></div></div><h4>点阵底纹</h4><p>.dotgrid<br>间距 22</p></div>
     </div>
-    <div class="note" style="margin-top:20px">其余 7 件：<strong>标签胶囊</strong>.chip（高 56–64）· <strong>窗口框</strong>.win（栏高 26）· <strong>虚线连接</strong>.link（4–5px / dash 12 10）· <strong>选中手柄</strong>.hdl（18px 对准角点）· <strong>指令气泡</strong>.bub（尖角 26）· <strong>星芒</strong>.spark（点题，1–2 处）· <strong>选中瓦片</strong>.tile-sel（5px + 12px 光晕）。</div>
+    <div class="note" style="margin-top:20px">基础页其余 7 件：<strong>标签胶囊</strong>.chip（高 56–64）· <strong>窗口框</strong>.win（栏高 26）· <strong>虚线连接</strong>.link（4–5px / dash 12 10）· <strong>选中手柄</strong>.hdl（18px 对准角点）· <strong>指令气泡</strong>.bub（尖角 26）· <strong>星芒</strong>.spark（点题，1–2 处）· <strong>选中瓦片</strong>.tile-sel（5px + 12px 光晕）。</div>
+
+    <h4 style="font-size:14px;font-weight:600;margin:26px 0 12px">扩展页 · 数据 / 状态 / 界面 / 装饰</h4>
+    <div class="grid4">
+      <div class="el"><div class="stage"><div style="width:120px;height:11px;border-radius:6px;background:#E1EEFD;overflow:hidden"><i style="display:block;height:100%;width:62%;border-radius:6px;background:linear-gradient(90deg,#4A9DFC,#7C6BF5)"></i></div></div><h4>进度条</h4><p>.prog<br>170×14 / r7</p></div>
+      <div class="el"><div class="stage" style="gap:16px"><i style="width:16px;height:16px;border-radius:50%;background:#4A9DFC;box-shadow:0 0 0 5px rgba(74,157,252,.16);display:block"></i><i style="width:16px;height:16px;border-radius:50%;background:#7C6BF5;box-shadow:0 0 0 5px rgba(124,107,245,.14);display:block"></i><i style="width:16px;height:16px;border-radius:50%;background:#B7D5F4;display:block"></i></div><h4>状态点</h4><p>.st<br>22 + 7 光晕</p></div>
+      <div class="el"><div class="stage"><div style="width:132px;height:46px;border-radius:13px;background:#fff;border:2px solid #E4F0FD;box-shadow:0 6px 14px rgba(31,71,141,.08);display:flex;align-items:center;padding:0 10px"><span style="width:19px;height:19px;border-radius:6px;background:#E3F0FE;display:block"></span><span style="margin-left:8px;font-size:11px;color:#1F3556;font-weight:600">会议纪要</span><span style="margin-left:auto;color:#B7D5F4;font-size:13px">›</span></div></div><h4>列表行</h4><p>.lrow<br>216×66</p></div>
+      <div class="el"><div class="stage"><div style="position:relative;width:104px;height:66px"><div style="position:absolute;left:4px;top:2px;width:96px;height:62px;border-radius:16px;background:linear-gradient(135deg,#4A9DFC,#7C6BF5)"></div><div style="position:absolute;left:9px;top:9px;width:86px;height:48px;border-radius:13px;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,255,255,.55));border:1px solid rgba(255,255,255,.95);box-shadow:0 8px 18px rgba(31,71,141,.18)"></div></div></div><h4>玻璃卡</h4><p>.glass<br>150×94 / r22</p></div>
+    </div>
+    <div class="note" style="margin-top:20px">扩展页其余 11 件：<strong>编号圆</strong>.num · <strong>角标卡</strong>.tc · <strong>头像组</strong>.avs · <strong>提示条</strong>.toast · <strong>图例</strong>.lgd · <strong>枢纽点</strong>.hub · <strong>双向箭头</strong>.arr2 · <strong>弧线连接</strong>.arc · <strong>网格底纹</strong>.gridbg · <strong>柔光</strong>.glow · <strong>同心波纹</strong>.ripple。</div>
   </section>
 
   <!-- 08 -->
